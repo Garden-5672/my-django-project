@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,46 +8,38 @@
     <style>
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f8f9fa;
+            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f8f9fa;
         }
-        .container {
-            text-align: center;
-            padding: 40px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+        .container { text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
         h1 { color: #333; margin-bottom: 10px; }
         p { color: #666; margin-bottom: 30px; }
         .btn-group { display: flex; flex-direction: column; gap: 10px; }
-        .btn {
-            padding: 12px 24px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: bold;
-            color: white;
-            transition: opacity 0.2s;
-        }
+        .btn { padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; transition: opacity 0.2s; }
         .btn:hover { opacity: 0.9; }
         .btn-google { background-color: #4285F4; }
         .btn-kakao { background-color: #FEE500; color: #000; }
         .btn-naver { background-color: #03C75A; }
+        .btn-logout { background-color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>환영합니다! 👋</h1>
-        <p>Django로 구축한 서비스입니다. SNS 계정으로 로그인하세요.</p>
-        <div class="btn-group">
-            <a href="#" class="btn btn-google">구글로 시작하기</a>
-            <a href="#" class="btn btn-kakao">카카오로 시작하기</a>
-            <a href="#" class="btn btn-naver">네이버로 시작하기</a>
-        </div>
+        {% if user.is_authenticated %}
+            <h1>반갑습니다, {{ user.username }}님! 👋</h1>
+            <p>로그인에 성공하셨습니다.</p>
+            <div class="btn-group">
+                <a href="{% url 'account_logout' %}" class="btn btn-logout">로그아웃</a>
+            </div>
+        {% else %}
+            <h1>환영합니다! 👋</h1>
+            <p>Django로 구축한 서비스입니다. SNS 계정으로 로그인하세요.</p>
+            <div class="btn-group">
+                <!-- 구글 로그인 연결 -->
+                <a href="{% provider_login_url 'google' %}" class="btn btn-google">구글로 시작하기</a>
+                <a href="{% provider_login_url 'kakao' %}" class="btn btn-kakao">카카오로 시작하기</a>
+                <a href="#" class="btn btn-naver">네이버로 시작하기 (준비중)</a>
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>

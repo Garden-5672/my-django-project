@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('main.urls')), # 메인 주소로 오는 요청을 main/urls.py로 전달
+    path('', include('main.urls')),
+    path('accounts/', include('allauth.urls')), # allauth 인증 URL 추가
 ]
