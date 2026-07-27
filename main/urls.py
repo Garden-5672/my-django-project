@@ -1,7 +1,8 @@
-# main/urls.py
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'), # 기본 루트 주소 ('') 접근 시 views.index 실행
+    path('', views.index, name='index'),
+    path('select-free/<int:tool_id>/', views.select_free_tool, name='select_free_tool'),
+    path('run/<int:tool_id>/', views.run_tool, name='run_tool'),
 ]

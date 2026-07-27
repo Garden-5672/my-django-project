@@ -3,23 +3,23 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>내 Django 프로젝트</title>
+    <title>AI & IT 마이크로 도구 플랫폼</title>
     <style>
-        body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f8f9fa;
-        }
-        .container { text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        h1 { color: #333; margin-bottom: 10px; }
-        p { color: #666; margin-bottom: 30px; }
-        .btn-group { display: flex; flex-direction: column; gap: 10px; }
-        .btn { padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; color: white; transition: opacity 0.2s; }
-        .btn:hover { opacity: 0.9; }
-        .btn-google { background-color: #4285F4; }
-        .btn-kakao { background-color: #FEE500; color: #000; }
-        .btn-naver { background-color: #03C75A; }
-        .btn-logout { background-color: #dc3545; }
+        body { font-family: 'Noto Sans KR', sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; background-color: #f9f9fb; }
+        .header-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .ranking-box { background: #eef2ff; border: 1px solid #c7d2fe; padding: 15px 20px; border-radius: 12px; margin-bottom: 25px; }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .tool-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
+        .btn { display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; cursor: pointer; border: none; }
+        .btn-primary { background: #4f46e5; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-pay { background: #f59e0b; color: white; }
+        .btn-disabled { background: #d1d5db; color: #6b7280; cursor: not-allowed; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .badge-free { background: #d1fae5; color: #065f46; }
+        .badge-top { background: #fef3c7; color: #92400e; }
+        .messages { list-style: none; padding: 0; margin-bottom: 15px; }
+        .messages li { padding: 10px 15px; background: #3b82f6; color: white; border-radius: 6px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -40,6 +40,88 @@
                 <a href="{% provider_login_url 'naver' %}" class="btn btn-naver">네이버로 시작하기</a>
             </div>
         {% endif %}
+    </div>
+    <!-- 메시지 알림 (성공/경고 등) -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="header-box">
+        <h1>🛠️ 나만의 스마트 도구 마켓</h1>
+        {% if user.is_authenticated %}
+            <p><strong>{{ user.username }}</strong>님 환영합니다!</p>
+            <p>내가 고른 무료 도구: 
+                {% if free_tool %}
+                    <span class="badge badge-free">{{ free_tool.icon }} {{ free_tool.name }}</span>
+                {% else %}
+                    <span style="color: #ef4444; font-weight: bold;">[미선택] 아래 도구 중 1개를 무료로 선택하세요!</span>
+                {% endif %}
+            </p>
+            <a href="{% url 'account_logout' %}" style="color: #6b7280; font-size: 0.9em;">로그아웃</a>
+        {% else %}
+            <p>소셜 로그인하고 원하시는 도구 1개를 무료로 이용해 보세요!</p>
+            <a href="{% provider_login_url 'google' %}" class="btn btn-primary" style="background: #ea4335;">구글 로그인</a>
+            <a href="{% provider_login_url 'kakao' %}" class="btn btn-primary" style="background: #fee500; color: black;">카카오 로그인</a>
+            <a href="{% provider_login_url 'naver' %}" class="btn btn-primary" style="background: #03cf5d;">네이버 로그인</a>
+        {% endif %}
+    </div>
+
+    <!-- 🏆 인기 도구 실시간 순위표 (Leaderboard) -->
+    <div class="ranking-box">
+        <h2>🏆 인기 도구 TOP 3 (실시간 순위표)</h2>
+        <ol style="margin: 0; padding-left: 20px;">
+            {% for tool in top_tools %}
+                <li style="margin-bottom: 5px;">
+                    <strong>{{ tool.icon }} {{ tool.name }}</strong> - 총 <code>{{ tool.usage_count }}</code>회 실행됨
+                </li>
+            {% empty %}
+                <li>아직 실행된 도구가 없습니다.</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <h2>🧰 전체 도구 목록</h2>
+    <div class="tool-grid">
+        {% for tool in tools %}
+            <div class="tool-card">
+                <div>
+                    <h3>{{ tool.icon }} {{ tool.name }}</h3>
+                    <p style="color: #4b5563; font-size: 0.95em;">{{ tool.description }}</p>
+                    <p style="color: #9ca3af; font-size: 0.85em;">누적 사용: {{ tool.usage_count }}회</p>
+                </div>
+
+                <div style="margin-top: 15px;">
+                    {% if user.is_authenticated %}
+                        <!-- 1. 내가 선택한 무료 도구인 경우 -->
+                        {% if free_tool and free_tool.id == tool.id %}
+                            <span class="badge badge-free" style="margin-bottom: 8px; display: block; text-align: center;">내 무료 도구</span>
+                            <a href="{% url 'run_tool' tool.id %}" class="btn btn-success" style="width: 100%; box-sizing: border-box;">실행하기</a>
+                        
+                        <!-- 2. 내 유료 결제 도구인 경우 -->
+                        {% elif tool.id in paid_tool_ids %}
+                            <span class="badge badge-top" style="margin-bottom: 8px; display: block; text-align: center;">구매 완료</span>
+                            <a href="{% url 'run_tool' tool.id %}" class="btn btn-success" style="width: 100%; box-sizing: border-box;">실행하기</a>
+                        
+                        <!-- 3. 아직 무료 도구를 고르지 않은 경우 -->
+                        {% elif not free_tool %}
+                            <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%; box-sizing: border-box;">무료 도구로 선택</a>
+                        
+                        <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
+                        {% else %}
+                            <button onclick="alert('이 도구는 결제 후 이용 가능합니다! (다음 단계에서 포트원 결제 연동 예정)');" class="btn btn-pay" style="width: 100%; box-sizing: border-box;">🔒 유료 해금 (결제)</button>
+                        {% endif %}
+                    {% else %}
+                        <span class="btn btn-disabled" style="width: 100%; box-sizing: border-box;">로그인 필요</span>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p>등록된 도구가 없습니다. Admin에서 추가해 주세요!</p>
+        {% endfor %}
     </div>
 </body>
 </html>
