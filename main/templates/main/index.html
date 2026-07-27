@@ -37,7 +37,7 @@
                 <!-- 구글 로그인 연결 -->
                 <a href="{% provider_login_url 'google' %}" class="btn btn-google">구글로 시작하기</a>
                 <a href="{% provider_login_url 'kakao' %}" class="btn btn-kakao">카카오로 시작하기</a>
-                <a href="#" class="btn btn-naver">네이버로 시작하기 (준비중)</a>
+                <a href="{% provider_login_url 'naver' %}" class="btn btn-naver">네이버로 시작하기</a>
             </div>
         {% endif %}
     </div>

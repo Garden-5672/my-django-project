@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.kakao',
+    'allauth.socialaccount.providers.naver',
 ]
 
 SITE_ID = 1
@@ -128,3 +129,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# 1. 소셜 로그인 시 "정말로 로그인하시겠습니까?" 중간 확인 페이지 생략
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# 2. 로그아웃 시 "정말로 로그아웃하시겠습니까?" 중간 확인 페이지 생략 (GET 요청 시 바로 로그아웃)
+ACCOUNT_LOGOUT_ON_GET = True
