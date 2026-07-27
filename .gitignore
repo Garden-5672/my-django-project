@@ -1,0 +1,13 @@
+# 파이썬 가상환경 및 캐시 파일
+*.pyc
+__pycache__/
+venv/
+.venv/
+
+# Django 관련 환경 설정 및 비밀 데이터
+.env
+db.sqlite3
+
+# IDE 설정 파일
+.vscode/
+.idea/
