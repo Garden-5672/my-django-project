@@ -3,7 +3,7 @@ from .models import Tool, UserToolAccess
 
 @admin.register(Tool)
 class ToolAdmin(admin.ModelAdmin):
-    list_display = ('name', 'icon', 'usage_count', 'created_at')
+    list_display = ('name', 'icon', 'purchase_count', 'created_at')
     search_fields = ('name', 'description')
 
 @admin.register(UserToolAccess)

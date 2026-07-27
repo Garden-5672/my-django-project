@@ -72,18 +72,20 @@
 
     <!-- 🏆 인기 도구 실시간 순위표 (Leaderboard) -->
     <div class="ranking-box">
-        <h2>🏆 인기 도구 TOP 3 (실시간 순위표)</h2>
+        <h2>🏆 가장 인기 있는 도구 TOP 3 (선택/구매 순위)</h2>
         <ol style="margin: 0; padding-left: 20px;">
             {% for tool in top_tools %}
                 <li style="margin-bottom: 5px;">
-                    <strong>{{ tool.icon }} {{ tool.name }}</strong> - 총 <code>{{ tool.usage_count }}</code>회 실행됨
+                    <strong>{{ tool.icon }} {{ tool.name }}</strong> - 총 <code>{{ tool.purchase_count }}</code>명이 선택함
                 </li>
             {% empty %}
-                <li>아직 실행된 도구가 없습니다.</li>
+                <li>아직 선택된 도구가 없습니다.</li>
             {% endfor %}
         </ol>
     </div>
-
+    
+    <p style="color: #9ca3af; font-size: 0.85em;">누적 선택: {{ tool.purchase_count }}회</p>
+    
     <h2>🧰 전체 도구 목록</h2>
     <div class="tool-grid">
         {% for tool in tools %}

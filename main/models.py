@@ -6,20 +6,27 @@ class Tool(models.Model):
     name = models.CharField(max_length=100, verbose_name="도구 이름")
     description = models.TextField(verbose_name="도구 설명")
     icon = models.CharField(max_length=10, default="🛠️", verbose_name="아이콘 이모지")
-    usage_count = models.PositiveIntegerField(default=0, verbose_name="총 사용 횟수")
+    
+    # 💡 실행 횟수 대신 '구매/선택 횟수'로 지표 변경
+    purchase_count = models.PositiveIntegerField(default=0, verbose_name="총 선택/구매 횟수")
+    
+    # 🔒 구매자 전용 제공 정보 (비구독자/미구매자에게는 숨김)
+    tool_link = models.URLField(blank=True, null=True, verbose_name="도구 실행 링크", help_text="예: https://notion.site/... 또는 외부 앱 URL")
+    access_code = models.CharField(max_length=100, blank=True, null=True, verbose_name="접속 비밀번호/키", help_text="구매자에게만 제공할 비밀번호")
+    usage_instruction = models.TextField(blank=True, null=True, verbose_name="도구 사용 방법 설명글")
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-usage_count'] # 사용 횟수가 많은 순(인기순)으로 기본 정렬
+        ordering = ['-purchase_count'] # 구매/선택 횟수 많은 순으로 정렬
 
     def __str__(self):
-        return f"{self.icon} {self.name} (사용: {self.usage_count}회)"
+        return f"{self.icon} {self.name} (선택/구매: {self.purchase_count}회)"
 
 
-# 2. 유저별 무료 도구 지정 및 구매 내역 모델
+# 2. 유저 권한 모델
 class UserToolAccess(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='tool_access')
-    # 유저가 무료로 선택한 1개의 도구 (선택 안 했으면 None)
     free_selected_tool = models.ForeignKey(
         Tool, 
         on_delete=models.SET_NULL, 
@@ -28,7 +35,6 @@ class UserToolAccess(models.Model):
         related_name='free_users',
         verbose_name="선택한 무료 도구"
     )
-    # 유저가 추가로 결제해서 해금한 도구들 (N:M 관계)
     paid_tools = models.ManyToManyField(Tool, blank=True, related_name='paid_users', verbose_name="결제한 도구들")
 
     def __str__(self):
