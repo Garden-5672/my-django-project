@@ -6,7 +6,9 @@ class Tool(models.Model):
     name = models.CharField(max_length=100, verbose_name="도구 이름")
     description = models.TextField(verbose_name="도구 설명")
     icon = models.CharField(max_length=10, default="🛠️", verbose_name="아이콘 이모지")
-    
+
+    price = models.PositiveIntegerField(default=3000, verbose_name="가격(원)")
+
     # 💡 실행 횟수 대신 '구매/선택 횟수'로 지표 변경
     purchase_count = models.PositiveIntegerField(default=0, verbose_name="총 선택/구매 횟수")
     

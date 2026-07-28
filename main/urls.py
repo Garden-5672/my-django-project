@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('select-free/<int:tool_id>/', views.select_free_tool, name='select_free_tool'),
     path('run/<int:tool_id>/', views.run_tool, name='run_tool'),
+    path('complete-payment/', views.complete_payment, name='complete_payment'),
 ]

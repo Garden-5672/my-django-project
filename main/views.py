@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from .models import Tool, UserToolAccess
+import json
 
 # 1. 메인 페이지 & 구매/선택 순위표
 def index(request):
@@ -66,3 +68,31 @@ def run_tool(request, tool_id):
         'tool': tool,
     }
     return render(request, 'main/run_tool.html', context)
+
+# main/views.py
+
+# 💡 결제 완료 검증 및 해금 API
+@login_required
+def complete_payment(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            tool_id = data.get('tool_id')
+            payment_id = data.get('payment_id') # 👈 imp_uid에서 payment_id로 변경!
+
+            tool = get_object_or_404(Tool, id=tool_id)
+            user_access, created = UserToolAccess.objects.get_or_create(user=request.user)
+
+            # 1. 유저의 결제된 도구 목록에 추가
+            user_access.paid_tools.add(tool)
+            
+            # 2. 도구 구매 횟수 +1 증가 (순위표 반영)
+            tool.purchase_count += 1
+            tool.save()
+
+            return JsonResponse({'status': 'success', 'message': f'{tool.name} 구매가 완료되었습니다!'})
+        
+        except Exception as e:
+            return JsonResponse({'status': 'fail', 'message': str(e)}, status=400)
+    
+    return JsonResponse({'status': 'fail', 'message': '잘못된 요청입니다.'}, status=400)

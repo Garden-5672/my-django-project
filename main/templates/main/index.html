@@ -4,6 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <title>AI & IT 마이크로 도구 플랫폼</title>
+
+    <!-- 1. 포트원 V2 SDK 불러오기 (이 줄이 requestPay 함수보다 위에 있어야 합니다!) -->
+    <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
+
+    <script>
+        async function requestPay(toolId, toolName, toolPrice) {
+            // SDK가 잘 로드되었는지 사전에 체크하는 안전장치 추가
+            if (typeof PortOne === 'undefined') {
+                alert("포트원 SDK 로딩에 실패했습니다. 인터넷 연결이나 스크립트 태그를 확인해 주세요.");
+                return;
+            }
+
+            try {
+                const response = await PortOne.requestPayment({
+                    storeId: "store-cae165c9-656f-4342-b7ec-677b8d71ccab",
+                    channelKey: "channel-key-5d31fd2b-c8c4-48c4-81d7-1876ad8555a1",
+                    paymentId: `payment-${new Date().getTime()}`,
+                    orderName: toolName,
+                    totalAmount: toolPrice,
+                    currency: "CURRENCY_KRW",
+                    payMethod: "EASY_PAY",
+                    customer: {
+                        fullName: "{{ user.username }}",
+                    },
+                });
+
+                if (response.code !== undefined) {
+                    return alert(`결제 실패: ${response.message}`);
+                }
+
+                const serverResponse = await fetch("/complete-payment/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({
+                        tool_id: toolId,
+                        payment_id: response.paymentId
+                    })
+                });
+
+                const result = await serverResponse.json();
+                if (result.status === 'success') {
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    alert(`처리 실패: ${result.message}`);
+                }
+
+            } catch (error) {
+                console.error("결제 처리 중 예외 발생:", error);
+                alert(`결제 오류 발생: ${error.message || error}`);
+            }
+        }
+
+        // 버튼 이벤트 연결
+        document.addEventListener("DOMContentLoaded", function() {
+            const payButtons = document.querySelectorAll(".btn-request-pay");
+        
+            payButtons.forEach(button => {
+                button.addEventListener("click", function() {
+                    const toolId = this.dataset.id;
+                    const toolName = this.dataset.name;
+                    const toolPrice = parseInt(this.dataset.price);
+
+                    requestPay(toolId, toolName, toolPrice);
+                });
+            });
+        });
+    </script>
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; background-color: #f9f9fb; }
         .header-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 25px; }
@@ -22,6 +93,7 @@
         .messages li { padding: 10px 15px; background: #3b82f6; color: white; border-radius: 6px; margin-bottom: 5px; }
     </style>
 </head>
+
 <body>
     <div class="container">
         {% if user.is_authenticated %}
@@ -114,7 +186,13 @@
                         
                         <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
                         {% else %}
-                            <button onclick="alert('이 도구는 결제 후 이용 가능합니다! (다음 단계에서 포트원 결제 연동 예정)');" class="btn btn-pay" style="width: 100%; box-sizing: border-box;">🔒 유료 해금 (결제)</button>
+                            <button class="btn btn-pay btn-request-pay" 
+                                    data-id="{{ tool.id }}" 
+                                    data-name="{{ tool.name }}" 
+                                    data-price="{{ tool.price|default:1000 }}"
+                                    style="width: 100%; box-sizing: border-box;">
+                                🔒 유료 해금 ({{ tool.price|default:1000 }}원)
+                            </button>
                         {% endif %}
                     {% else %}
                         <span class="btn btn-disabled" style="width: 100%; box-sizing: border-box;">로그인 필요</span>
@@ -127,3 +205,4 @@
     </div>
 </body>
 </html>
+
