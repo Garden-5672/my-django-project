@@ -9,71 +9,90 @@
     <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 
     <script>
-        async function requestPay(toolId, toolName, toolPrice) {
-            // SDK가 잘 로드되었는지 사전에 체크하는 안전장치 추가
-            if (typeof PortOne === 'undefined') {
-                alert("포트원 SDK 로딩에 실패했습니다. 인터넷 연결이나 스크립트 태그를 확인해 주세요.");
+    // 💡 [설정] 결제 수단별 포트원 채널 키 관리
+    const PORTONE_CONFIG = {
+        STORE_ID: "store-cae165c9-656f-4342-b7ec-677b8d71ccab", // 가온님의 Store ID 입력
+        CHANNEL_KEYS: {
+            kakaopay: "channel-key-5d31fd2b-c8c4-48c4-81d7-1876ad8555a1", // 카카오페이 테스트 키[cite: 2]
+            naverpay: "" // 👈 나중에 네이버페이 채널 키가 발급되면 여기에 "channel-key-xxx"만 입력하세요!
+        }
+    };
+
+    async function requestPay(toolId, toolName, toolPrice, provider) {
+        const channelKey = PORTONE_CONFIG.CHANNEL_KEYS[provider];
+
+        // 💡 네이버페이 키가 아직 없을 때 예외 처리
+        if (!channelKey) {
+            if (provider === 'naverpay') {
+                alert("네이버페이 연동 준비 중입니다. 카카오페이 결제를 이용해 주세요!");
                 return;
             }
-
-            try {
-                const response = await PortOne.requestPayment({
-                    storeId: "store-cae165c9-656f-4342-b7ec-677b8d71ccab",
-                    channelKey: "channel-key-5d31fd2b-c8c4-48c4-81d7-1876ad8555a1",
-                    paymentId: `payment-${new Date().getTime()}`,
-                    orderName: toolName,
-                    totalAmount: toolPrice,
-                    currency: "CURRENCY_KRW",
-                    payMethod: "EASY_PAY",
-                    customer: {
-                        fullName: "{{ user.username }}",
-                    },
-                });
-
-                if (response.code !== undefined) {
-                    return alert(`결제 실패: ${response.message}`);
-                }
-
-                const serverResponse = await fetch("/complete-payment/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
-                    body: JSON.stringify({
-                        tool_id: toolId,
-                        payment_id: response.paymentId
-                    })
-                });
-
-                const result = await serverResponse.json();
-                if (result.status === 'success') {
-                    alert(result.message);
-                    location.reload();
-                } else {
-                    alert(`처리 실패: ${result.message}`);
-                }
-
-            } catch (error) {
-                console.error("결제 처리 중 예외 발생:", error);
-                alert(`결제 오류 발생: ${error.message || error}`);
-            }
+            alert("결제 채널 키 설정이 올바르지 않습니다.");
+            return;
         }
 
-        // 버튼 이벤트 연결
-        document.addEventListener("DOMContentLoaded", function() {
-            const payButtons = document.querySelectorAll(".btn-request-pay");
-        
-            payButtons.forEach(button => {
-                button.addEventListener("click", function() {
-                    const toolId = this.dataset.id;
-                    const toolName = this.dataset.name;
-                    const toolPrice = parseInt(this.dataset.price);
+        try {
+            // 포트원 V2 결제 요청
+            const response = await PortOne.requestPayment({
+                storeId: PORTONE_CONFIG.STORE_ID,
+                channelKey: channelKey,
+                paymentId: `payment-${new Date().getTime()}`,
+                orderName: toolName,
+                totalAmount: toolPrice,
+                currency: "CURRENCY_KRW",
+                payMethod: "EASY_PAY", // V2 간편결제 규격
+                customer: {
+                    fullName: "{{ user.username }}",
+                },
+            });
 
-                    requestPay(toolId, toolName, toolPrice);
-                });
+            // 결제 실패/취소 시
+            if (response.code !== undefined) {
+                return alert(`결제 실패: ${response.message}`);
+            }
+
+            // 백엔드(Django) 검증 및 해금 요청 (카카오/네이버 모두 동일한 백엔드 API 사용)
+            const serverResponse = await fetch("/complete-payment/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    tool_id: toolId,
+                    payment_id: response.paymentId
+                })
+            });
+
+            const result = await serverResponse.json();
+            if (result.status === 'success') {
+                alert(result.message);
+                location.reload(); // 성공 시 페이지 새로고침
+            } else {
+                alert(`처리 실패: ${result.message}`);
+            }
+
+        } catch (error) {
+            console.error("결제 처리 중 예외 발생:", error);
+            alert(`결제 오류 발생: ${error.message || error}`);
+        }
+    }
+
+    // 버튼 클릭 이벤트 바인딩
+    document.addEventListener("DOMContentLoaded", function() {
+        const payButtons = document.querySelectorAll(".btn-request-pay");
+
+        payButtons.forEach(button => {
+            button.addEventListener("click", function() {
+                const toolId = this.dataset.id;
+                const toolName = this.dataset.name;
+                const toolPrice = parseInt(this.dataset.price);
+                const provider = this.dataset.provider; // kakaopay 또는 naverpay
+
+                requestPay(toolId, toolName, toolPrice, provider);
             });
         });
+    });
     </script>
     <style>
         body { font-family: 'Noto Sans KR', sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; background-color: #f9f9fb; }
@@ -185,13 +204,11 @@
                             <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%; box-sizing: border-box;">무료 도구로 선택</a>
                         
                         <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
+                        <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
                         {% else %}
-                            <button class="btn btn-pay btn-request-pay" 
-                                    data-id="{{ tool.id }}" 
-                                    data-name="{{ tool.name }}" 
-                                    data-price="{{ tool.price|default:1000 }}"
-                                    style="width: 100%; box-sizing: border-box;">
-                                🔒 유료 해금 ({{ tool.price|default:1000 }}원)
+                            <button class="btn btn-pay" style="width: 100%; box-sizing: border-box;"
+                                    onclick="openPaymentSelectModal('{{ tool.id }}', '{{ tool.name }}', '{{ tool.price|default:1000 }}')">
+                                💳 결제하기
                             </button>
                         {% endif %}
                     {% else %}
@@ -203,6 +220,47 @@
             <p>등록된 도구가 없습니다. Admin에서 추가해 주세요!</p>
         {% endfor %}
     </div>
+    <!-- 💳 결제 수단 선택 모달 (카카오페이 / 네이버페이 전용) -->
+    <div id="paymentSelectModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 25px; border-radius: 12px; width: 320px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <h3 style="margin-top:0; margin-bottom: 10px;">결제 수단 선택</h3>
+            <p id="modalToolTitle" style="font-weight: bold; color: #4f46e5; margin-bottom: 20px;"></p>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="button" class="btn" style="background-color: #fee500; color: #000; border: none; padding: 12px; font-size: 1em;" onclick="submitPayment('kakaopay')">
+                    🟡 카카오페이 결제
+                </button>
+                <button type="button" class="btn" style="background-color: #03cf5d; color: #fff; border: none; padding: 12px; font-size: 1em;" onclick="submitPayment('naverpay')">
+                    🟢 네이버페이 결제
+                </button>
+            </div>
+
+            <button type="button" class="btn btn-disabled" style="margin-top: 15px; width: 100%;" onclick="closePaymentSelectModal()">
+                취소
+            </button>
+        </div>
+    </div>
+
+    <script>
+    // 선택된 도구 정보를 담을 임시 변수
+    let currentSelectedTool = { id: null, name: '', price: 0 };
+
+    function openPaymentSelectModal(toolId, toolName, toolPrice) {
+        currentSelectedTool = { id: toolId, name: toolName, price: parseInt(toolPrice) };
+        document.getElementById('modalToolTitle').innerText = `${toolName} (${currentSelectedTool.price.toLocaleString()}원)`;
+        document.getElementById('paymentSelectModal').style.display = 'flex';
+    }
+
+    function closePaymentSelectModal() {
+        document.getElementById('paymentSelectModal').style.display = 'none';
+    }
+
+    function submitPayment(provider) {
+        closePaymentSelectModal();
+        // 기존 작성해두신 requestPay 함수 호출
+        requestPay(currentSelectedTool.id, currentSelectedTool.name, currentSelectedTool.price, provider);
+    }
+    </script>
 </body>
 </html>
 
