@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # 1. 도구(Tool) 모델
 class Tool(models.Model):
@@ -42,3 +43,40 @@ class UserToolAccess(models.Model):
     def __str__(self):
         selected = self.free_selected_tool.name if self.free_selected_tool else "미선택"
         return f"{self.user.username} - [무료 선택: {selected}]"
+
+class Post(models.Model):
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="작성자")
+    tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="관련 도구")
+    title = models.CharField(max_length=200, verbose_name="제목")
+    content = models.TextField(verbose_name="내용")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="작성일")
+    views = models.PositiveIntegerField(default=0, verbose_name="조회수")
+
+    def __str__(self):
+        return self.title
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.TextField(verbose_name="댓글 내용")
+    created_at = models.DateTimeField(auto_now_add=True) 
+
+class Inquiry(models.Model):
+    STATUS_CHOICES = [
+        ('pending', '답변 대기'),
+        ('completed', '답변 완료'),
+    ]
+
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="문의자")
+    title = models.CharField(max_length=200, verbose_name="문의 제목")
+    content = models.TextField(verbose_name="문의 내용")
+    
+    # 관리자 답변 필드
+    answer = models.TextField(blank=True, null=True, verbose_name="관리자 답변")
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending', verbose_name="처리 상태")
+    
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="문의일")
+    answered_at = models.DateTimeField(null=True, blank=True, verbose_name="답변일")
+
+    def __str__(self):
+        return f"[{self.get_status_display()}] {self.title}"   

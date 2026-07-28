@@ -114,6 +114,11 @@
 </head>
 
 <body>
+    <!-- index.html 상단 적절한 위치에 추가 -->
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'board_list' %}" class="btn btn-primary">💬 도구 커뮤니티 게시판</a>
+        <a href="{% url 'inquiry_list' %}" class="btn btn-pay">❓ 1:1 문의 게시판</a>
+    </div>
     <div class="container">
         {% if user.is_authenticated %}
             <h1>반갑습니다, {{ user.username }}님! 👋</h1>

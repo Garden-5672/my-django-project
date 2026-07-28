@@ -1,0 +1,42 @@
+<!-- main/templates/main/inquiry_list.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>1:1 문의 게시판</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .inquiry-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; color: white; }
+        .bg-pending { background-color: #f59e0b; }
+        .bg-completed { background-color: #10b981; }
+    </style>
+</head>
+<body>
+    <h1>❓ 1:1 문의 게시판</h1>
+    <a href="/">← 메인으로 돌아가기</a>
+    <hr>
+
+    {% for inquiry in inquiries %}
+        <div class="inquiry-card">
+            <h3>{{ inquiry.title }}</h3>
+            <p>{{ inquiry.content }}</p>
+            <div>
+                상태: 
+                {% if inquiry.status == 'pending' %}
+                    <span class="badge bg-pending">답변 대기</span>
+                {% else %}
+                    <span class="badge bg-completed">답변 완료</span>
+                {% endif %}
+            </div>
+            {% if inquiry.answer %}
+                <div style="background: #f3f4f6; padding: 10px; margin-top: 10px; border-radius: 6px;">
+                    <strong>💬 관리자 답변:</strong> {{ inquiry.answer }}
+                </div>
+            {% endif %}
+        </div>
+    {% empty %}
+        <p>등록된 문의가 없습니다.</p>
+    {% endfor %}
+</body>
+</html>

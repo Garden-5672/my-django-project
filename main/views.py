@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from .models import Tool, UserToolAccess
+from .models import Post, Inquiry
 import json
 
 # 1. 메인 페이지 & 구매/선택 순위표
@@ -96,3 +97,18 @@ def complete_payment(request):
             return JsonResponse({'status': 'fail', 'message': str(e)}, status=400)
     
     return JsonResponse({'status': 'fail', 'message': '잘못된 요청입니다.'}, status=400)
+
+# 1. 커뮤니티 게시판 목록
+def board_list(request):
+    posts = Post.objects.all().order_by('-created_at') # 최신순 정렬
+    return render(request, 'main/board_list.html', {'posts': posts})
+
+# 2. 1:1 문의 게시판 목록
+def inquiry_list(request):
+    # 로그인한 사용자의 문의 내역만 조회 (관리자는 전체 조회)
+    if request.user.is_staff:
+        inquiries = Inquiry.objects.all().order_by('-created_at')
+    else:
+        inquiries = Inquiry.objects.filter(author=request.user).order_by('-created_at')
+        
+    return render(request, 'main/inquiry_list.html', {'inquiries': inquiries})

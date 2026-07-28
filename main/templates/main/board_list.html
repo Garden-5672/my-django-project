@@ -1,0 +1,43 @@
+<!-- main/templates/main/board_list.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>도구 커뮤니티 게시판</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .post-card { border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+        .post-title { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; }
+        .post-meta { font-size: 0.85em; color: #6b7280; margin-bottom: 12px; }
+        .btn { display: inline-block; padding: 8px 16px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <h1>💬 도구 커뮤니티 게시판</h1>
+    <p>도구 사용 팁과 의견을 자유롭게 나누어보세요.</p>
+    
+    <div style="margin-bottom: 16px;">
+        <a href="/" style="text-decoration: none; color: #4b5563;">← 메인으로 돌아가기</a>
+    </div>
+
+    <hr style="margin-bottom: 20px;">
+
+    {% for post in posts %}
+        <div class="post-card">
+            <div class="post-title">{{ post.title }}</div>
+            <div class="post-meta">
+                작성자: {{ post.author.username }} | 
+                작성일: {{ post.created_at|date:"Y-m-d H:i" }}
+                {% if post.tool %}
+                    | 관련 도구: <strong>{{ post.tool.name }}</strong>
+                {% endif %}
+            </div>
+            <p>{{ post.content }}</p>
+        </div>
+    {% empty %}
+        <div style="text-align: center; padding: 40px; color: #6b7280;">
+            아직 작성된 글이 없습니다. 첫 번째 이야기를 남겨보세요!
+        </div>
+    {% endfor %}
+</body>
+</html>
