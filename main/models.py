@@ -45,11 +45,12 @@ class UserToolAccess(models.Model):
         return f"{self.user.username} - [무료 선택: {selected}]"
 
 class Post(models.Model):
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="작성자")
-    tool = models.ForeignKey(Tool, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="관련 도구")
-    title = models.CharField(max_length=200, verbose_name="제목")
-    content = models.TextField(verbose_name="내용")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="작성일")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tool = models.ForeignKey('Tool', on_delete=models.SET_NULL, null=True, blank=True)
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    is_notice = models.BooleanField(default=False, verbose_name="공지글 여부") # 👈 공지글 필드 추가!
+    created_at = models.DateTimeField(auto_now_add=True)
     views = models.PositiveIntegerField(default=0, verbose_name="조회수")
 
     def __str__(self):

@@ -4,6 +4,9 @@ from django.contrib import messages
 from django.http import JsonResponse
 from .models import Tool, UserToolAccess
 from .models import Post, Inquiry
+from .forms import PostForm, InquiryForm
+from django.db.models import Case, When, Value, IntegerField
+from django.http import HttpResponseForbidden
 import json
 
 # 1. 메인 페이지 & 구매/선택 순위표
@@ -98,9 +101,17 @@ def complete_payment(request):
     
     return JsonResponse({'status': 'fail', 'message': '잘못된 요청입니다.'}, status=400)
 
-# 1. 커뮤니티 게시판 목록
+# main/views.py
 def board_list(request):
-    posts = Post.objects.all().order_by('-created_at') # 최신순 정렬
+    # admin 글(우선순위 1) -> 일반 글(우선순위 2) 순으로 정렬 후 최신순 정렬
+    posts = Post.objects.annotate(
+        is_admin=Case(
+            When(author__username='admin', then=Value(1)),
+            default=Value(2),
+            output_field=IntegerField(),
+        )
+    ).order_by('is_admin', '-is_notice', '-created_at')
+
     return render(request, 'main/board_list.html', {'posts': posts})
 
 # 2. 1:1 문의 게시판 목록
@@ -112,3 +123,45 @@ def inquiry_list(request):
         inquiries = Inquiry.objects.filter(author=request.user).order_by('-created_at')
         
     return render(request, 'main/inquiry_list.html', {'inquiries': inquiries})
+
+# 1. 커뮤니티 글쓰기
+@login_required
+def post_create(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user # 현재 로그인한 유저 세팅
+            post.save()
+            return redirect('board_list')
+    else:
+        form = PostForm()
+    return render(request, 'main/post_form.html', {'form': form, 'title': '✏️ 커뮤니티 글쓰기'})
+
+# 2. 1:1 문의하기 작성
+@login_required
+def inquiry_create(request):
+    if request.method == 'POST':
+        form = InquiryForm(request.POST)
+        if form.is_valid():
+            inquiry = form.save(commit=False)
+            inquiry.author = request.user
+            inquiry.save()
+            return redirect('inquiry_list')
+    else:
+        form = InquiryForm()
+    return render(request, 'main/post_form.html', {'form': form, 'title': '❓ 1:1 문의하기'})
+
+@login_required
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    
+    # 작성자 본인인지 확인 (관리자 superuser에게도 권한을 주려면 request.user.is_superuser 추가 가능)
+    if post.author != request.user:
+        return HttpResponseForbidden("본인의 글만 삭제할 수 있습니다.")
+    
+    if request.method == 'POST':
+        post.delete()
+        return redirect('board_list')
+        
+    return redirect('board_list')

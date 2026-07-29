@@ -5,39 +5,89 @@
     <meta charset="UTF-8">
     <title>도구 커뮤니티 게시판</title>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
-        .post-card { border: 1px solid #e5e7eb; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
-        .post-title { font-size: 1.2em; font-weight: bold; margin-bottom: 8px; }
-        .post-meta { font-size: 0.85em; color: #6b7280; margin-bottom: 12px; }
-        .btn { display: inline-block; padding: 8px 16px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 800px; margin: 30px auto; padding: 0 20px; color: #333; line-height: 1.5; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-write { display: inline-block; padding: 8px 16px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }
+        
+        /* 💡 상자 크기를 줄인 아코디언 카드 스타일 */
+        .post-card { border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; background: #fff; overflow: hidden; }
+        .notice-card { border: 1.5px solid #3b82f6; background-color: #f0f9ff; }
+        
+        /* Summary (닫혀있을 때 보이는 제목 영역) 패딩 축소 */
+        summary { padding: 12px 16px; cursor: pointer; font-weight: bold; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        summary::-webkit-details-marker { display: none; }
+        summary:hover { background-color: rgba(0,0,0,0.02); }
+        
+        .badge-notice { background-color: #059669; color: white; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; margin-right: 6px; font-weight: normal; }
+        .post-title-text { font-size: 1rem; color: #111827; }
+        .post-meta { font-size: 0.8rem; color: #6b7280; font-weight: normal; margin-top: 2px; }
+        
+        /* 💡 클릭 시 열리는 본문 영역 (열렸을 때만 노출) */
+        .post-content { padding: 14px 16px; border-top: 1px dashed #cbd5e1; background-color: #ffffff; color: #374151; white-space: pre-line; font-size: 0.95rem; }
+        
+        .empty-box { text-align: center; padding: 40px 20px; background-color: #f9fafb; border-radius: 8px; border: 1px dashed #d1d5db; }
+        .back-link { display: inline-block; margin-bottom: 15px; color: #6b7280; text-decoration: none; font-size: 0.9rem; }
     </style>
 </head>
 <body>
-    <h1>💬 도구 커뮤니티 게시판</h1>
-    <p>도구 사용 팁과 의견을 자유롭게 나누어보세요.</p>
-    
-    <div style="margin-bottom: 16px;">
-        <a href="/" style="text-decoration: none; color: #4b5563;">← 메인으로 돌아가기</a>
+
+    <a href="/" class="back-link">← 메인으로 돌아가기</a>
+
+    <div class="header-container">
+        <div>
+            <h1 style="margin: 0; font-size: 1.6rem;">💬 도구 커뮤니티</h1>
+            <p style="margin: 4px 0 0 0; color: #6b7280; font-size: 0.9rem;">제목을 클릭하면 내용이 열립니다.</p>
+        </div>
+        <a href="{% url 'post_create' %}" class="btn-write">✏️ 새 글 작성</a>
     </div>
 
-    <hr style="margin-bottom: 20px;">
+    <hr style="border: 0; border-top: 1px solid #e5e7eb; margin-bottom: 20px;">
 
+    <!-- 게시글 목록 -->
     {% for post in posts %}
-        <div class="post-card">
-            <div class="post-title">{{ post.title }}</div>
-            <div class="post-meta">
-                작성자: {{ post.author.username }} | 
-                작성일: {{ post.created_at|date:"Y-m-d H:i" }}
-                {% if post.tool %}
-                    | 관련 도구: <strong>{{ post.tool.name }}</strong>
+        <details class="post-card {% if post.author.username == 'admin' or post.is_notice %}notice-card{% endif %}">
+            <!-- 1. summary 영역: 닫혀있을 때 딱 '제목과 작성정보'만 표시 -->
+            <summary>
+                <div>
+                    <div>
+                        {% if post.author.username == 'admin' %}
+                            <span class="badge-notice">관리자</span>
+                        {% elif post.is_notice %}
+                            <span class="badge-notice" style="background-color: #ef4444;">공지</span>
+                        {% endif %}
+                        <span class="post-title-text">{{ post.title }}</span>
+                    </div>
+                    <div class="post-meta">
+                        작성자: {{ post.author.username }} | {{ post.created_at|date:"Y-m-d H:i" }}
+                    </div>
+                </div>
+                <span style="color: #9ca3af; font-size: 0.8rem;">▼ 열기</span>
+            </summary>
+            
+            <!-- 2. post-content 영역: 클릭하여 열었을 때만 본문(content) 노출 -->
+            <div class="post-content">
+                {{ post.content }}
+
+                <!-- 본인 글 삭제 버튼 -->
+                {% if request.user == post.author %}
+                    <div style="text-align: right; margin-top: 12px;">
+                        <form action="{% url 'post_delete' post.pk %}" method="POST" style="display: inline;" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                            {% csrf_token %}
+                            <button type="submit" style="background: #ef4444; color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+                                🗑️ 삭제
+                            </button>
+                        </form>
+                    </div>
                 {% endif %}
             </div>
-            <p>{{ post.content }}</p>
-        </div>
+        </details>
     {% empty %}
-        <div style="text-align: center; padding: 40px; color: #6b7280;">
-            아직 작성된 글이 없습니다. 첫 번째 이야기를 남겨보세요!
+        <div class="empty-box">
+            <p style="font-size: 1.5rem; margin: 0 0 8px 0;">🚀</p>
+            <h3 style="margin: 0 0 6px 0; color: #111827; font-size: 1.1rem;">아직 등록된 게시글이 없습니다.</h3>
+            <a href="{% url 'post_create' %}" class="btn-write" style="margin-top: 8px;">✏️ 첫 게시글 작성하기</a>
         </div>
     {% endfor %}
+
 </body>
 </html>
