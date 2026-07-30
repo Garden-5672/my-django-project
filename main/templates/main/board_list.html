@@ -58,7 +58,7 @@
                         <span class="post-title-text">{{ post.title }}</span>
                     </div>
                     <div class="post-meta">
-                        작성자: {{ post.author.username }} | {{ post.created_at|date:"Y-m-d H:i" }}
+                        작성자: {{ post.author.profile.nickname|default:post.author.username }} | {{ post.created_at|date:"Y-m-d H:i" }}
                     </div>
                 </div>
                 <span style="color: #9ca3af; font-size: 0.8rem;">▼ 열기</span>

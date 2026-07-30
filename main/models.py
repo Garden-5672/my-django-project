@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=30, unique=True, null=True, blank=True, verbose_name="닉네임")
+
+    def __str__(self):
+        return self.nickname or self.user.username
+    
 # 1. 도구(Tool) 모델
 class Tool(models.Model):
     name = models.CharField(max_length=100, verbose_name="도구 이름")

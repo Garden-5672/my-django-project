@@ -7,7 +7,25 @@ from .models import Post, Inquiry
 from .forms import PostForm, InquiryForm
 from django.db.models import Case, When, Value, IntegerField
 from django.http import HttpResponseForbidden
+from .models import Profile
 import json
+
+@login_required
+def set_nickname(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+    if profile.nickname:
+        return redirect('/')
+        
+    if request.method == 'POST':
+        nickname = request.POST.get('nickname', '').strip()
+        if nickname:
+            if Profile.objects.filter(nickname=nickname).exists():
+                return render(request, 'main/set_nickname.html', {'error': '이미 사용 중인 닉네임입니다.'})
+            profile.nickname = nickname
+            profile.save()
+            return redirect('/')
+            
+    return render(request, 'main/set_nickname.html')
 
 # 1. 메인 페이지 & 구매/선택 순위표
 def index(request):
