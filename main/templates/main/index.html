@@ -354,19 +354,18 @@
         <div>
             <a href="{% url 'board_list' %}" class="btn btn-primary">💬 도구 커뮤니티 게시판</a>
             <a href="{% url 'inquiry_list' %}" class="btn btn-pay">❓ 1:1 문의 게시판</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'account_logout' %}" class="btn btn-logout">로그아웃</a>
+            {% endif %}
         </div>
     </div>
 
     <div class="container">
         {% if user.is_authenticated %}
             <h2>반갑습니다, {{ user.profile.nickname|default:user.username }}님! 👋</h2>
-            <p style="color: var(--text-sub);">로그인에 성공하셨습니다.</p>
-            <div class="btn-group" style="margin-bottom: 20px;">
-                <a href="{% url 'account_logout' %}" class="btn btn-logout">로그아웃</a>
-            </div>
         {% else %}
             <h1>환영합니다! 👋</h1>
-            <p style="color: var(--text-sub);">Django로 구축한 서비스입니다. SNS 계정으로 로그인하세요.</p>
+            <p style="color: var(--text-sub);">SNS 계정으로 로그인 후 이용해 주세요.</p>
         {% endif %}
     </div>
 
@@ -393,9 +392,9 @@
         {% else %}
             <p style="color: var(--text-sub);">소셜 로그인하고 원하시는 도구 1개를 무료로 이용해 보세요!</p>
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <a href="{% provider_login_url 'google' %}" class="btn btn-primary" style="background: #ea4335;">구글 로그인</a>
-                <a href="{% provider_login_url 'kakao' %}" class="btn btn-primary" style="background: #fee500; color: black;">카카오 로그인</a>
-                <a href="{% provider_login_url 'naver' %}" class="btn btn-primary" style="background: #03cf5d;">네이버 로그인</a>
+                <a href="{% provider_login_url 'google' %}" class="btn btn-primary" style="background: #f0789d;">구글 로그인</a>
+                <a href="{% provider_login_url 'kakao' %}" class="btn btn-primary" style="background: #f0789d;">카카오 로그인</a>
+                <a href="{% provider_login_url 'naver' %}" class="btn btn-primary" style="background: #f0789d;">네이버 로그인</a>
             </div>
         {% endif %}
     </div>

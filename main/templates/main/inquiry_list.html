@@ -70,7 +70,7 @@
             padding: 0 20px; 
             color: var(--text-main); 
             background-color: var(--bg-primary);
-            line-height: 1.5; 
+            line-height: 1.6; 
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
@@ -109,15 +109,16 @@
             margin-bottom: 30px; 
             box-shadow: var(--shadow-sm);
         }
-        .faq-box h3 { margin-top: 0; color: var(--text-main); }
+        .faq-box h3 { margin-top: 0; color: var(--text-main); font-size: 1.1rem; }
         .faq-item { margin-bottom: 12px; }
+        .faq-item:last-child { margin-bottom: 0; }
         .faq-q { font-weight: bold; color: var(--text-main); }
-        .faq-a { color: var(--text-sub); font-size: 0.95em; margin-top: 4px; }
+        .faq-a { color: var(--text-sub); font-size: 0.92rem; margin-top: 4px; }
 
         .inquiry-card { 
             background: var(--bg-surface);
             border: 1px solid var(--border-color); 
-            padding: 20px; 
+            padding: 20px 24px; 
             border-radius: var(--radius); 
             margin-bottom: 16px; 
             box-shadow: var(--shadow-sm);
@@ -127,10 +128,10 @@
             border-color: var(--primary-pink);
             box-shadow: var(--shadow-md);
         }
-        .inquiry-card h4 { margin-top: 0; color: var(--text-main); }
-        .inquiry-card p { color: var(--text-sub); }
+        .inquiry-card h4 { margin-top: 0; margin-bottom: 8px; color: var(--text-main); font-size: 1.1rem; }
+        .inquiry-card p { color: var(--text-sub); margin-bottom: 12px; line-height: 1.5; }
 
-        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.8em; color: white; font-weight: 500; }
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; color: white; font-weight: 600; }
         .bg-pending { background-color: var(--accent-rose); }
         .bg-completed { background-color: var(--primary-pink); }
 
@@ -140,17 +141,17 @@
             background-color: var(--primary-pink); 
             color: white; 
             text-decoration: none; 
-            border-radius: 6px; 
-            font-weight: 500; 
+            border-radius: 8px; 
+            font-weight: 600; 
             font-size: 0.9rem;
             transition: opacity 0.2s ease;
             border: none;
+            cursor: pointer;
         }
         .btn:hover { opacity: 0.9; }
 
         .back-link { 
             display: inline-block; 
-            margin-bottom: 15px; 
             color: var(--text-sub); 
             text-decoration: none; 
             font-size: 0.9rem; 
@@ -169,19 +170,19 @@
                 <path d="M18 2a4 4 0 0 0-4 4c0 2 4 6 4 6s4-4 4-6a4 4 0 0 0-4-4z" />
                 <path d="M6 15c-1 0-2 1-2 2s1 2 2 2h4" />
             </svg>
-            <span>PLATFORM EMBLEM</span>
+            <span>LEO TOOLBOX</span>
         </div>
-        <a href="/" class="back-link" style="margin-bottom:0;">← 메인으로 돌아가기</a>
+        <a href="/" class="back-link">← 메인으로 돌아가기</a>
     </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h1 style="margin: 0; font-size: 1.6rem;">❓ 고객지원 & 1:1 문의</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h1 style="margin: 0; font-size: 1.5rem;">❓ 고객지원 & 1:1 문의</h1>
         <a href="{% url 'inquiry_create' %}" class="btn">✏️ 1:1 문의하기</a>
     </div>
 
     <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
 
-    <!-- 💡 허전함을 채워줄 FAQ 영역 -->
+    <!-- 💡 자주 묻는 질문 FAQ 영역 -->
     <div class="faq-box">
         <h3>💡 자주 묻는 질문 (FAQ)</h3>
         <div class="faq-item">
@@ -194,13 +195,13 @@
         </div>
     </div>
 
-    <h3>내 문의 내역</h3>
+    <h3 style="font-size: 1.2rem; margin-bottom: 14px;">내 문의 내역</h3>
     {% for inquiry in inquiries %}
         <div class="inquiry-card">
             <h4>{{ inquiry.title }}</h4>
             <p>{{ inquiry.content }}</p>
-            <div style="color: var(--text-sub); font-size: 0.9em;">
-                상태: 
+            <div style="color: var(--text-sub); font-size: 0.88rem; display: flex; align-items: center; gap: 8px;">
+                <span>상태:</span>
                 {% if inquiry.status == 'pending' %}
                     <span class="badge bg-pending">답변 대기</span>
                 {% else %}
@@ -208,7 +209,7 @@
                 {% endif %}
             </div>
             {% if inquiry.answer %}
-                <div style="background: var(--bg-subtle); padding: 14px; margin-top: 12px; border-radius: 8px; color: var(--text-main);">
+                <div style="background: var(--bg-subtle); padding: 14px 16px; margin-top: 14px; border-radius: 8px; color: var(--text-main); font-size: 0.92rem; border-left: 3px solid var(--primary-pink);">
                     <strong>💬 관리자 답변:</strong> {{ inquiry.answer }}
                 </div>
             {% endif %}

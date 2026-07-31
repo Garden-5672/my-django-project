@@ -2,28 +2,216 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - LEO TOOLBOX</title>
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 6px; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .btn-submit { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+        /* ==========================================================================
+           Design System: Pink Minimalist Emblem Theme
+           ========================================================================== */
+        :root {
+            --bg-primary: #fff5f7;        /* 은은한 피치 핑크 배경 */
+            --bg-surface: #ffffff;        /* 순백색 카드 배경 */
+            --bg-subtle: #fce8ed;         /* 연핑크 호버/강조 영역 */
+            
+            --text-main: #2b1b22;         /* 다크 핑크/버건디 톤 어두운 텍스트 */
+            --text-sub: #8a6d7b;          /* 소프트 로즈 브라운 텍스트 */
+            --border-color: #f7d4dc;      /* 연한 핑크 테두리선 */
+
+            /* Point Colors (Pink Palette) */
+            --primary-pink: #e85d88;      /* 체리 블라썸 핑크 (메인 버튼/포인트) */
+            --accent-rose: #c84168;       /* 딥 로즈 핑크 (강조/테두리) */
+            --soft-pink: #fdf0f3;         /* 연한 핑크 배지 */
+
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+            --radius: 12px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1215;
+                --bg-surface: #261a20;
+                --bg-subtle: #38242f;
+                --text-main: #fde8ed;
+                --text-sub: #c4a3b1;
+                --border-color: #402835;
+                --primary-pink: #f0789d;
+                --accent-rose: #f48fb1;
+                --soft-pink: #331f29;
+                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+                --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+            }
+        }
+
+        body.dark-mode {
+            --bg-primary: #1a1215;
+            --bg-surface: #261a20;
+            --bg-subtle: #38242f;
+            --text-main: #fde8ed;
+            --text-sub: #c4a3b1;
+            --border-color: #402835;
+            --primary-pink: #f0789d;
+            --accent-rose: #f48fb1;
+            --soft-pink: #331f29;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; 
+            max-width: 650px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            color: var(--text-main); 
+            background-color: var(--bg-primary);
+            line-height: 1.6; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top Bar & Emblem Header */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .logo-emblem {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .emblem-icon {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-pink);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* 폼 카드 컨테이너 */
+        .form-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .form-title {
+            font-size: 1.4rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+
+        .form-group label { 
+            display: block; 
+            font-weight: 600; 
+            font-size: 0.95rem;
+            margin-bottom: 8px; 
+            color: var(--text-main);
+        }
+
+        /* 장고 {{ form }} 요소 커스텀 스타일링 */
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"],
+        .form-group textarea,
+        .form-group select,
+        .form-control { 
+            width: 100%; 
+            padding: 12px 14px; 
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus,
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            box-shadow: 0 0 0 3px rgba(232, 93, 136, 0.15);
+        }
+
+        .btn-submit { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary-pink); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-submit:hover { opacity: 0.92; }
+
+        .back-link { 
+            display: inline-block; 
+            color: var(--text-sub); 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--primary-pink); }
     </style>
 </head>
 <body>
-    <h2>{{ title }}</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="form-group">
-                <label>{{ field.label }}</label>
-                {{ field }}
-            </div>
-        {% endfor %}
-        <button type="submit" class="btn-submit">작성 완료</button>
-    </form>
-    <br>
-    <a href="javascript:history.back()">취소하고 돌아가기</a>
+
+    <!-- 상단 엠블럼 내비게이션 -->
+    <div class="top-navbar">
+        <div class="logo-emblem">
+            <svg class="emblem-icon" viewBox="0 0 24 24">
+                <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
+                <path d="M13 19l2 2 2-2-2-2z" />
+                <circle cx="18" cy="6" r="2" />
+                <path d="M18 2a4 4 0 0 0-4 4c0 2 4 6 4 6s4-4 4-6a4 4 0 0 0-4-4z" />
+                <path d="M6 15c-1 0-2 1-2 2s1 2 2 2h4" />
+            </svg>
+            <span>LEO TOOLBOX</span>
+        </div>
+        <a href="javascript:history.back()" class="back-link">← 이전으로 돌아가기</a>
+    </div>
+
+    <!-- 입력 폼 카드 -->
+    <div class="form-card">
+        <h2 class="form-title">✏️ {{ title }}</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small style="color: var(--text-sub); font-size: 0.8rem; display: block; margin-top: 4px;">{{ field.help_text }}</small>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn-submit" style="margin-top: 10px;">작성 완료하기</button>
+        </form>
+    </div>
 </body>
 </html>

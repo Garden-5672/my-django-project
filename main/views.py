@@ -1,3 +1,6 @@
+import os
+from django.conf import settings
+from django.http import FileResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -183,3 +186,13 @@ def post_delete(request, pk):
         return redirect('board_list')
         
     return redirect('board_list')
+
+def download_excel_template(request):
+    # static 폴더 내의 템플릿 파일 경로 (실제 파일 경로에 맞게 수정해주세요)
+    file_path = os.path.join(settings.BASE_DIR, 'main', 'static', 'files', 'profit_first_template.xlsx')
+    
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'), as_attachment=True, filename='Profit_First_Template.xlsx')
+        
+    # 파일이 아직 준비되지 않았을 경우 에러 처리
+    raise Http404("다운로드할 템플릿 파일을 찾을 수 없습니다.")

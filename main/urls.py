@@ -11,4 +11,5 @@ urlpatterns = [
     path('board/<int:pk>/delete/', views.post_delete, name='post_delete'), # 👈 삭제 URL 추가
     path('inquiry/', views.inquiry_list, name='inquiry_list'),
     path('inquiry/create/', views.inquiry_create, name='inquiry_create'), # 문의하기 추가
+    path('download/template/', views.download_excel_template, name='download_excel_template'),
 ]

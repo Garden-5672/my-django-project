@@ -2,45 +2,381 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ tool.name }} - 사용 안내</title>
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; max-width: 650px; margin: 0 auto; padding: 40px 20px; line-height: 1.6; }
-        .info-card { background: white; border: 2px solid #4f46e5; border-radius: 12px; padding: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .secret-box { background: #f3f4f6; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; border-radius: 4px; }
-        .btn-link { display: inline-block; background: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px; }
-        .btn-back { display: inline-block; margin-top: 25px; text-decoration: none; color: #6b7280; font-size: 0.9em; }
+        /* ==========================================================================
+           Design System: Pink Minimalist Emblem Theme
+           ========================================================================== */
+        :root {
+            --bg-primary: #fff5f7;        /* 은은한 피치 핑크 배경 */
+            --bg-surface: #ffffff;        /* 순백색 카드 배경 */
+            --bg-subtle: #fce8ed;         /* 연핑크 호버/강조 영역 */
+            
+            --text-main: #2b1b22;         /* 다크 핑크/버건디 톤 어두운 텍스트 */
+            --text-sub: #8a6d7b;          /* 소프트 로즈 브라운 텍스트 */
+            --border-color: #f7d4dc;      /* 연한 핑크 테두리선 */
+
+            /* Point Colors (Pink Palette) */
+            --primary-pink: #e85d88;      /* 체리 블라썸 핑크 (메인 버튼/포인트) */
+            --accent-rose: #c84168;       /* 딥 로즈 핑크 (강조/테두리) */
+            --soft-pink: #fdf0f3;         /* 연한 핑크 배지 */
+
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+            --radius: 12px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1215;
+                --bg-surface: #261a20;
+                --bg-subtle: #38242f;
+                --text-main: #fde8ed;
+                --text-sub: #c4a3b1;
+                --border-color: #402835;
+                --primary-pink: #f0789d;
+                --accent-rose: #f48fb1;
+                --soft-pink: #331f29;
+                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+                --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+            }
+        }
+
+        body.dark-mode {
+            --bg-primary: #1a1215;
+            --bg-surface: #261a20;
+            --bg-subtle: #38242f;
+            --text-main: #fde8ed;
+            --text-sub: #c4a3b1;
+            --border-color: #402835;
+            --primary-pink: #f0789d;
+            --accent-rose: #f48fb1;
+            --soft-pink: #331f29;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; 
+            max-width: 800px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            color: var(--text-main); 
+            background-color: var(--bg-primary);
+            line-height: 1.6; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top Bar & Emblem Header */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-emblem {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .emblem-icon {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-pink);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .back-link { 
+            display: inline-block; 
+            color: var(--text-sub); 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--primary-pink); }
+
+        .header-container { margin-bottom: 20px; }
+        .header-title { font-size: 1.6rem; margin: 0 0 6px 0; color: var(--text-main); }
+        .header-sub { color: var(--text-sub); font-size: 0.95rem; margin: 0; }
+
+        /* 카드 컨테이너 스타일 */
+        .card-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 인증 키 강조 박스 */
+        .secret-box {
+            background: var(--bg-subtle);
+            border-left: 4px solid var(--accent-rose);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .notice-text {
+            color: var(--accent-rose);
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .code-badge {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--accent-rose);
+            display: inline-block;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* 메인 버튼 */
+        .btn-primary { 
+            display: inline-block;
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary-pink); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1.05rem; 
+            font-weight: bold;
+            cursor: pointer; 
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary:hover { opacity: 0.92; }
+
+        /* 탭 스타일 */
+        .tab-container {
+            margin-top: 10px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-pink);
+            border-bottom-color: var(--primary-pink);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Step List (탭 2 상세용) */
+        .step-list {
+            padding-left: 0;
+            list-style: none;
+            margin: 0;
+        }
+
+        .step-item {
+            background: var(--bg-subtle);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary-pink);
+        }
+
+        .step-title {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            margin: 0 0 8px 0;
+            line-height: 1.5;
+        }
+
+        .info-card {
+            background: var(--bg-subtle);
+            border-radius: 8px;
+            padding: 18px;
+            border: 1px solid var(--border-color);
+        }
     </style>
 </head>
 <body>
 
-    <div class="info-card">
-        <h1>{{ tool.icon }} {{ tool.name }}</h1>
-        <p style="color: #4b5563;">{{ tool.description }}</p>
-
-        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-
-        <h3>📖 도구 사용 방법</h3>
-        <p style="white-space: pre-line; background: #fafafa; padding: 15px; border-radius: 8px;">
-            {{ tool.usage_instruction|default:"지정된 링크로 이동하신 후 전달받으신 비밀번호를 입력하여 도구를 사용해 주세요!" }}
-        </p>
-
-        <!-- 🔒 구매자 전용 비밀번호 및 링크 안내 -->
-        <div class="secret-box">
-            <p style="margin: 0 0 5px 0;">🔑 <strong>접속 비밀번호 / 인증 키:</strong></p>
-            <code style="font-size: 1.2em; color: #d97706; font-weight: bold;">
-                {{ tool.access_code|default:"별도 비밀번호 없음 (바로 이용 가능)" }}
-            </code>
+    <!-- 상단 내비게이션 바 -->
+    <div class="top-navbar">
+        <div class="logo-emblem">
+            <svg class="emblem-icon" viewBox="0 0 24 24">
+                <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
+                <path d="M13 19l2 2 2-2-2-2z" />
+                <circle cx="18" cy="6" r="2" />
+                <path d="M18 2a4 4 0 0 0-4 4c0 2 4 6 4 6s4-4 4-6a4 4 0 0 0-4-4z" />
+                <path d="M6 15c-1 0-2 1-2 2s1 2 2 2h4" />
+            </svg>
+            <span>LEO TOOLBOX</span>
         </div>
-
-        {% if tool.tool_link %}
-            <a href="{{ tool.tool_link }}" target="_blank" class="btn-link">🚀 도구 실행하러 가기 (새 창)</a>
-        {% else %}
-            <p style="color: #ef4444;">등록된 도구 링크가 없습니다. Admin에서 추가해 주세요.</p>
-        {% endif %}
-
-        <br>
-        <a href="{% url 'index' %}" class="btn-back">← 메인 목록으로 돌아가기</a>
+        <a href="{% url 'index' %}" class="back-link">← 메인 목록으로 돌아가기</a>
     </div>
 
+    <!-- 헤더 영역 -->
+    <div class="header-container">
+        <h1 class="header-title">{{ tool.icon }} {{ tool.name }}</h1>
+        <p class="header-sub">{{ tool.description }}</p>
+    </div>
+
+    <!-- 1. 최상단: 인증키 및 바로가기 버튼 섹션 -->
+    <div class="card-container">
+        <!-- 매월 수정 안내 & 대시보드 인증 키 -->
+        <div class="secret-box">
+            <div class="notice-text">
+                ⚠️ 대시보드 접속 인증 키는 보안을 위해 매월 수정됩니다.
+            </div>
+            <div style="margin-top: 6px;">
+                <span style="font-size: 0.85rem; color: var(--text-sub); display: block; margin-bottom: 4px;">🔑 이번 달 접속 인증 키:</span>
+                <span class="code-badge">
+                    {{ tool.access_code|default:"leo-1234567" }}
+                </span>
+            </div>
+        </div>
+
+        <!-- 실행 버튼 -->
+        {% if tool.tool_link %}
+            <a href="{{ tool.tool_link }}" target="_blank" class="btn-primary">
+                🚀 {{ tool.name }} 대시보드 실행하기 (새 창)
+            </a>
+        {% else %}
+            <p style="color: var(--accent-rose); font-size: 0.9rem; margin: 0;">등록된 도구 링크가 없습니다. Admin에서 추가해 주세요.</p>
+        {% endif %}
+    </div>
+
+    <!-- 2. 하단: 안내사항 2탭 섹션 -->
+    <div class="card-container tab-container">
+        <h2 style="font-size: 1.15rem; margin-top: 0; margin-bottom: 16px; color: var(--text-main);">📌 도구 이용 안내</h2>
+
+        <!-- 탭 버튼 -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('tab1', this)">📥 대시보드 내 다운로드</button>
+            <button class="tab-btn" onclick="switchTab('tab2', this)">🔗 구글 시트 연동 방식 (상세)</button>
+        </div>
+
+        <!-- 탭 1 내용: 대시보드 내 다운로드 안내 -->
+        <div id="tab1" class="tab-content active">
+            <div class="info-card">
+                <h3 style="margin-top: 0; font-size: 1rem; color: var(--primary-pink);">💡 대시보드 내 다운로드 기능 활용 안내</h3>
+                <p style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">
+                    본 도구는 별도의 오프라인 파일 다운로드 없이 <strong>대시보드 내부에서 결과 및 리포트를 직접 다운로드</strong>할 수 있도록 구현되어 있습니다.
+                </p>
+                <ul style="padding-left: 20px; margin: 0; font-size: 0.88rem; color: var(--text-sub);">
+                    <li>대시보드 접속 후 계산된 정산 내역 및 분석 데이터를 Excel 형태로 바로 내보낼 수 있습니다.</li>
+                    <li>데이터의 최신 상태 유지 및 보안을 위해 웹 대시보드 상에서 작업을 권장합니다.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 탭 2 내용: 구글 시트 연동 방식 (상세) -->
+        <div id="tab2" class="tab-content">
+            <p style="font-size: 0.88rem; color: var(--text-sub); margin-top: 0; margin-bottom: 14px;">
+                외부 서버에 개인 금융 데이터를 저장하지 않고, 대표님의 개인 구글 드라이브와 대시보드를 직접 안전하게 연결하는 방식입니다.
+            </p>
+
+            <ul class="step-list">
+                <li class="step-item">
+                    <div class="step-title">1단계: 전용 데이터 저장소 생성 (사본 복제)</div>
+                    <p class="step-desc">
+                        아래 구글 시트 템플릿에 접근한 후 <strong>[사본 만들기]</strong>를 실행하여 대표님 소유의 드라이브에 시트를 생성합니다. (원하신다면 파일
+이름을 자유롭게 변경하셔도 괜찮습니다.)
+                    </p>
+                    <a href="https://docs.google.com/spreadsheets/d/1YXoUbtR5jh7-4KNeOA1FWr1vcPpqb4yKsZ1VleSJw5A/copy" target="_blank" style="color: var(--primary-pink); font-size: 0.85rem; font-weight: bold; text-decoration: underline;">
+                        🔗 Profit First 구글 시트 템플릿 복제 링크
+                    </a>
+                </li>
+
+                <li class="step-item">
+                    <div class="step-title">2단계: 자동화 보안 권한 설정 (공유)</div>
+                    <p class="step-desc">
+                        생성된 대표님의 구글 시트 우측 상단 <strong>[공유]</strong> 버튼을 클릭하고, 대시보드 전용 API 이메일을 <strong>[편집자]</strong> 권한으로 추가해 주세요.
+                    </p>
+                    <span class="code-badge" style="font-size: 0.85rem; font-weight: normal;">
+                        profit-first-api@biztool-lab.iam.gserviceaccount.com
+                    </span>
+                    <p style="font-size: 0.8rem; color: var(--text-sub); margin: 4px 0 0 0;">
+                        * 조직 외 사용자 안내가 뜨더라도 표준 자동화 보안 절차이므로 안심하고 승인하셔도 됩니다.
+                    </p>
+                </li>
+
+                <li class="step-item">
+                    <div class="step-title">3단계: 대시보드에 URL 및 인증키 입력</div>
+                    <p class="step-desc">
+                        <ol>
+                            <li>상단 주소창에 있는 구글 스프레드시트 전체 주소(URL)를 복사합니다.</li>
+                            <li>다시 Profit First 대시보드 화면으로 돌아옵니다.</li>
+                            <li>사이드바 또는 상단에 마련된 [내 구글 시트 주소 (URL) 입력]란에 복사한 주소를 그대로 붙여넣어 줍니다.</li>
+                            <li>[연결 완료 및 구글 시트 저장] 버튼을 누르면 모든 세팅이 안전하게 종료됩니다.</li>
+                        </ol>
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 하단 돌아가기 -->
+    <div style="margin-top: 24px; text-align: center;">
+        <a href="{% url 'index' %}" class="back-link">← 메인 목록으로 돌아가기</a>
+    </div>
+
+    <!-- 탭 전환 스크립트 -->
+    <script>
+        function switchTab(tabId, element) {
+            // 모든 탭 버튼 및 컨텐츠 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // 선택한 탭 활성화
+            element.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    </script>
 </body>
 </html>
