@@ -1,0 +1,158 @@
+/* ==========================================================================
+   Design System: Option C - Minimalist Emblem (White & Dark Mode)
+   ========================================================================== */
+
+:root {
+  /* [Light Mode - Default] */
+  --bg-primary: #f8f9fa;        /* 소프트 그레이 (배경) */
+  --bg-surface: #ffffff;        /* 심플 화이트 (카드/컨테이너) */
+  --bg-subtle: #f1f3f5;         /* 호버 및 구분 영역 */
+  
+  --text-main: #212529;         /* 딥 숯색 (본문) */
+  --text-sub: #6c757d;          /* 웜 그레이 (보조 텍스트 - 시츄) */
+  --border-color: #e9ecef;      /* 라인아트용 경계선 */
+
+  /* Point Colors (꽃, 칼, 시츄) */
+  --primary-sage: #8a9a86;      /* 세이지 그린 (꽃/식물) */
+  --primary-rose: #b8860b;      /* 로즈 골드 / 은은한 금속빛 (칼/포인트) */
+  --accent-shihtzu: #fcfbf9;    /* 오프 화이트 (시츄 모피) */
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --radius: 12px;
+}
+
+/* [Dark Mode] */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #121314;      /* 다크 매트 그레이 */
+    --bg-surface: #1e2022;      /* 카드 배경 */
+    --bg-subtle: #292c2f;
+    
+    --text-main: #f8f9fa;
+    --text-sub: #adb5bd;
+    --border-color: #2c3034;
+
+    --primary-sage: #9caf97;
+    --primary-rose: #d4a373;
+    --accent-shihtzu: #2b2d30;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/* 다크모드 수동 토글 클래스 지원 */
+body.dark-mode {
+  --bg-primary: #121314;
+  --bg-surface: #1e2022;
+  --bg-subtle: #292c2f;
+  --text-main: #f8f9fa;
+  --text-sub: #adb5bd;
+  --border-color: #2c3034;
+  --primary-sage: #9caf97;
+  --primary-rose: #d4a373;
+  --accent-shihtzu: #2b2d30;
+}
+
+/* ==========================================================================
+   Component Styles
+   ========================================================================== */
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 1. Header & Navigation */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo-emblem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Line Art Emblem (SVG 아이콘 스타일ing) */
+.emblem-icon {
+  width: 32px;
+  height: 32px;
+  stroke: var(--primary-rose);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 2. Card Component (모던 미니멀 UI) */
+.card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--primary-sage);
+  box-shadow: var(--shadow-md);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  margin-top: 0;
+  color: var(--text-main);
+}
+
+.card-desc {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* 3. Button Styles (칼날의 모던한 절제미 반영) */
+.btn-primary {
+  background-color: var(--primary-sage);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--primary-rose);
+  border: 1px solid var(--primary-rose);
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: var(--bg-subtle);
+}

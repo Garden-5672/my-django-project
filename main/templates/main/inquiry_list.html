@@ -1,28 +1,185 @@
+<!-- main/templates/main/inquiry_list.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1:1 문의 게시판</title>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
-        .faq-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        /* ==========================================================================
+           Design System: Pink Minimalist Emblem Theme
+           ========================================================================== */
+        :root {
+            /* [Light Mode - Pink Tone] */
+            --bg-primary: #fff5f7;        /* 은은한 피치 핑크 배경 */
+            --bg-surface: #ffffff;        /* 순백색 카드 배경 */
+            --bg-subtle: #fce8ed;         /* 연핑크 호버/강조 영역 */
+            
+            --text-main: #2b1b22;         /* 다크 핑크/버건디 톤 어두운 텍스트 */
+            --text-sub: #8a6d7b;          /* 소프트 로즈 브라운 텍스트 */
+            --border-color: #f7d4dc;      /* 연한 핑크 테두리선 */
+
+            /* Point Colors (Pink Palette) */
+            --primary-pink: #e85d88;      /* 체리 블라썸 핑크 (메인 버튼/포인트) */
+            --accent-rose: #c84168;       /* 딥 로즈 핑크 (강조/테두리) */
+            --soft-pink: #fdf0f3;         /* 연한 핑크 배지 */
+
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+            --radius: 12px;
+        }
+
+        /* [Dark Mode - Dark Pink & Magenta Tone] */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1215;      /* 딥 플럼/다크 핑크 매트 배경 */
+                --bg-surface: #261a20;      /* 다크 로즈 카드 배경 */
+                --bg-subtle: #38242f;
+                
+                --text-main: #fde8ed;        /* 연한 핑크빛 오프화이트 텍스트 */
+                --text-sub: #c4a3b1;
+                --border-color: #402835;
+
+                --primary-pink: #f0789d;     /* 네온 체리 핑크 */
+                --accent-rose: #f48fb1;      /* 소프트 파스텔 핑크 */
+                --soft-pink: #331f29;
+
+                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+                --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+            }
+        }
+
+        body.dark-mode {
+            --bg-primary: #1a1215;
+            --bg-surface: #261a20;
+            --bg-subtle: #38242f;
+            --text-main: #fde8ed;
+            --text-sub: #c4a3b1;
+            --border-color: #402835;
+            --primary-pink: #f0789d;
+            --accent-rose: #f48fb1;
+            --soft-pink: #331f29;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; 
+            max-width: 800px; 
+            margin: 30px auto; 
+            padding: 0 20px; 
+            color: var(--text-main); 
+            background-color: var(--bg-primary);
+            line-height: 1.5; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top Bar & Emblem Header */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-emblem {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .emblem-icon {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-pink);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .faq-box { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-color); 
+            border-left: 4px solid var(--primary-pink);
+            padding: 20px 24px; 
+            border-radius: var(--radius); 
+            margin-bottom: 30px; 
+            box-shadow: var(--shadow-sm);
+        }
+        .faq-box h3 { margin-top: 0; color: var(--text-main); }
         .faq-item { margin-bottom: 12px; }
-        .faq-q { font-weight: bold; color: #1e293b; }
-        .faq-a { color: #64748b; font-size: 0.95em; margin-top: 4px; }
-        .inquiry-card { border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; margin-bottom: 12px; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; color: white; }
-        .bg-pending { background-color: #f59e0b; }
-        .bg-completed { background-color: #10b981; }
-        .btn { display: inline-block; padding: 10px 18px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; }
+        .faq-q { font-weight: bold; color: var(--text-main); }
+        .faq-a { color: var(--text-sub); font-size: 0.95em; margin-top: 4px; }
+
+        .inquiry-card { 
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color); 
+            padding: 20px; 
+            border-radius: var(--radius); 
+            margin-bottom: 16px; 
+            box-shadow: var(--shadow-sm);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .inquiry-card:hover {
+            border-color: var(--primary-pink);
+            box-shadow: var(--shadow-md);
+        }
+        .inquiry-card h4 { margin-top: 0; color: var(--text-main); }
+        .inquiry-card p { color: var(--text-sub); }
+
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 0.8em; color: white; font-weight: 500; }
+        .bg-pending { background-color: var(--accent-rose); }
+        .bg-completed { background-color: var(--primary-pink); }
+
+        .btn { 
+            display: inline-block; 
+            padding: 10px 18px; 
+            background-color: var(--primary-pink); 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: 500; 
+            font-size: 0.9rem;
+            transition: opacity 0.2s ease;
+            border: none;
+        }
+        .btn:hover { opacity: 0.9; }
+
+        .back-link { 
+            display: inline-block; 
+            margin-bottom: 15px; 
+            color: var(--text-sub); 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--primary-pink); }
     </style>
 </head>
 <body>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h1>❓ 고객지원 & 1:1 문의</h1>
+    <div class="top-navbar">
+        <div class="logo-emblem">
+            <svg class="emblem-icon" viewBox="0 0 24 24">
+                <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
+                <path d="M13 19l2 2 2-2-2-2z" />
+                <circle cx="18" cy="6" r="2" />
+                <path d="M18 2a4 4 0 0 0-4 4c0 2 4 6 4 6s4-4 4-6a4 4 0 0 0-4-4z" />
+                <path d="M6 15c-1 0-2 1-2 2s1 2 2 2h4" />
+            </svg>
+            <span>PLATFORM EMBLEM</span>
+        </div>
+        <a href="/" class="back-link" style="margin-bottom:0;">← 메인으로 돌아가기</a>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h1 style="margin: 0; font-size: 1.6rem;">❓ 고객지원 & 1:1 문의</h1>
         <a href="{% url 'inquiry_create' %}" class="btn">✏️ 1:1 문의하기</a>
     </div>
-    <a href="/">← 메인으로 돌아가기</a>
-    <hr style="margin: 20px 0;">
+
+    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
 
     <!-- 💡 허전함을 채워줄 FAQ 영역 -->
     <div class="faq-box">
@@ -42,7 +199,7 @@
         <div class="inquiry-card">
             <h4>{{ inquiry.title }}</h4>
             <p>{{ inquiry.content }}</p>
-            <div>
+            <div style="color: var(--text-sub); font-size: 0.9em;">
                 상태: 
                 {% if inquiry.status == 'pending' %}
                     <span class="badge bg-pending">답변 대기</span>
@@ -51,13 +208,13 @@
                 {% endif %}
             </div>
             {% if inquiry.answer %}
-                <div style="background: #f1f5f9; padding: 12px; margin-top: 10px; border-radius: 6px;">
+                <div style="background: var(--bg-subtle); padding: 14px; margin-top: 12px; border-radius: 8px; color: var(--text-main);">
                     <strong>💬 관리자 답변:</strong> {{ inquiry.answer }}
                 </div>
             {% endif %}
         </div>
     {% empty %}
-        <div style="text-align: center; padding: 40px; color: #94a3b8; background: #f8fafc; border-radius: 8px;">
+        <div style="text-align: center; padding: 40px; color: var(--text-sub); background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius);">
             아직 남기신 문의가 없습니다. 궁금한 점이 있다면 언제든 문의해 주세요!
         </div>
     {% endfor %}

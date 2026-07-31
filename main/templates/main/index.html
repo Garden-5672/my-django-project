@@ -3,6 +3,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI & IT 마이크로 도구 플랫폼</title>
 
     <!-- 1. 포트원 V2 SDK 불러오기 (이 줄이 requestPay 함수보다 위에 있어야 합니다!) -->
@@ -94,43 +95,281 @@
         });
     });
     </script>
+
     <style>
-        body { font-family: 'Noto Sans KR', sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; background-color: #f9f9fb; }
-        .header-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .ranking-box { background: #eef2ff; border: 1px solid #c7d2fe; padding: 15px 20px; border-radius: 12px; margin-bottom: 25px; }
-        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-        .tool-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: space-between; }
-        .btn { display: inline-block; padding: 8px 16px; text-decoration: none; border-radius: 6px; font-weight: bold; text-align: center; cursor: pointer; border: none; }
-        .btn-primary { background: #4f46e5; color: white; }
-        .btn-success { background: #10b981; color: white; }
-        .btn-pay { background: #f59e0b; color: white; }
-        .btn-disabled { background: #d1d5db; color: #6b7280; cursor: not-allowed; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
-        .badge-free { background: #d1fae5; color: #065f46; }
-        .badge-top { background: #fef3c7; color: #92400e; }
+        /* ==========================================================================
+           Design System: Option C - Pink Minimalist Emblem Theme
+           ========================================================================== */
+        :root {
+            /* [Light Mode - Pink Tone] */
+            --bg-primary: #fff5f7;        /* 은은한 피치 핑크 배경 */
+            --bg-surface: #ffffff;        /* 순백색 카드 배경 */
+            --bg-subtle: #fce8ed;         /* 연핑크 호버/강조 영역 */
+            
+            --text-main: #2b1b22;         /* 다크 핑크/버건디 톤 어두운 텍스트 */
+            --text-sub: #8a6d7b;          /* 소프트 로즈 브라운 텍스트 */
+            --border-color: #f7d4dc;      /* 연한 핑크 테두리선 */
+
+            /* Point Colors (Pink Palette) */
+            --primary-pink: #e85d88;      /* 체리 블라썸 핑크 (메인 버튼/포인트) */
+            --accent-rose: #c84168;       /* 딥 로즈 핑크 (강조/테두리) */
+            --soft-pink: #fdf0f3;         /* 연한 핑크 배지 */
+
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+            --radius: 12px;
+        }
+
+        /* [Dark Mode - Dark Pink & Magenta Tone] */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #1a1215;      /* 딥 플럼/다크 핑크 매트 배경 */
+                --bg-surface: #261a20;      /* 다크 로즈 카드 배경 */
+                --bg-subtle: #38242f;
+                
+                --text-main: #fde8ed;        /* 연한 핑크빛 오프화이트 텍스트 */
+                --text-sub: #c4a3b1;
+                --border-color: #402835;
+
+                --primary-pink: #f0789d;     /* 네온 체리 핑크 */
+                --accent-rose: #f48fb1;      /* 소프트 파스텔 핑크 */
+                --soft-pink: #331f29;
+
+                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+                --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+            }
+        }
+
+        /* 수동 다크모드 토글 지원 */
+        body.dark-mode {
+            --bg-primary: #1a1215;
+            --bg-surface: #261a20;
+            --bg-subtle: #38242f;
+            --text-main: #fde8ed;
+            --text-sub: #c4a3b1;
+            --border-color: #402835;
+            --primary-pink: #f0789d;
+            --accent-rose: #f48fb1;
+            --soft-pink: #331f29;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif; 
+            max-width: 900px; 
+            margin: 0 auto; 
+            padding: 24px 20px; 
+            line-height: 1.6; 
+            background-color: var(--bg-primary); 
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Top Header & Emblem Logo */
+        .top-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-emblem {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .emblem-icon {
+            width: 28px;
+            height: 28px;
+            stroke: var(--primary-pink);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Boxes & Cards */
+        .header-box { 
+            background: var(--bg-surface); 
+            padding: 24px; 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow-sm); 
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px; 
+        }
+
+        .ranking-box { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-color); 
+            border-left: 4px solid var(--primary-pink);
+            padding: 20px 24px; 
+            border-radius: var(--radius); 
+            margin-bottom: 25px; 
+            box-shadow: var(--shadow-sm);
+        }
+
+        .ranking-box h2 {
+            margin-top: 0;
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+
+        .tool-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 20px; 
+        }
+
+        .tool-card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius); 
+            padding: 24px; 
+            box-shadow: var(--shadow-sm); 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary-pink);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tool-card h3 {
+            margin-top: 0;
+            color: var(--text-main);
+        }
+
+        /* Buttons */
+        .btn { 
+            display: inline-block; 
+            padding: 10px 18px; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-weight: 500; 
+            font-size: 0.9rem;
+            text-align: center; 
+            cursor: pointer; 
+            border: none; 
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-primary { 
+            background: var(--primary-pink); 
+            color: #ffffff; 
+        }
+        .btn-primary:hover { opacity: 0.9; }
+
+        .btn-success { 
+            background: var(--primary-pink); 
+            color: #ffffff; 
+        }
+        .btn-success:hover { opacity: 0.9; }
+
+        .btn-pay { 
+            background: transparent; 
+            color: var(--primary-pink); 
+            border: 1px solid var(--primary-pink);
+        }
+        .btn-pay:hover { 
+            background: var(--bg-subtle); 
+        }
+
+        .btn-disabled { 
+            background: var(--bg-subtle); 
+            color: var(--text-sub); 
+            cursor: not-allowed; 
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid var(--border-color);
+        }
+        .btn-logout:hover { background: var(--bg-subtle); }
+
+        /* Badges */
+        .badge { 
+            display: inline-block; 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 0.8em; 
+            font-weight: 600; 
+        }
+        .badge-free { 
+            background: var(--bg-subtle); 
+            color: var(--primary-pink); 
+            border: 1px solid var(--primary-pink);
+        }
+        .badge-top { 
+            background: var(--bg-subtle); 
+            color: var(--accent-rose); 
+            border: 1px solid var(--accent-rose);
+        }
+
+        /* Messages */
         .messages { list-style: none; padding: 0; margin-bottom: 15px; }
-        .messages li { padding: 10px 15px; background: #3b82f6; color: white; border-radius: 6px; margin-bottom: 5px; }
+        .messages li { 
+            padding: 12px 16px; 
+            background: var(--primary-pink); 
+            color: white; 
+            border-radius: 6px; 
+            margin-bottom: 8px; 
+        }
+
+        /* Modal Theme Adjustments */
+        .modal-content {
+            background: var(--bg-surface) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-main) !important;
+            box-shadow: var(--shadow-md) !important;
+        }
     </style>
 </head>
 
 <body>
-    <!-- index.html 상단 적절한 위치에 추가 -->
-    <div style="margin-bottom: 20px;">
-        <a href="{% url 'board_list' %}" class="btn btn-primary">💬 도구 커뮤니티 게시판</a>
-        <a href="{% url 'inquiry_list' %}" class="btn btn-pay">❓ 1:1 문의 게시판</a>
+    <!-- 상단 엠블럼 로고 및 커뮤니티 버튼 영역 -->
+    <div class="top-navbar">
+        <div class="logo-emblem">
+            <!-- 시츄 + 칼 + 꽃 미니멀 라인아트 SVG 엠블럼 -->
+            <svg class="emblem-icon" viewBox="0 0 24 24">
+                <!-- 검(Blade) Line -->
+                <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
+                <path d="M13 19l2 2 2-2-2-2z" />
+                <!-- 꽃(Flower) Line -->
+                <circle cx="18" cy="6" r="2" />
+                <path d="M18 2a4 4 0 0 0-4 4c0 2 4 6 4 6s4-4 4-6a4 4 0 0 0-4-4z" />
+                <!-- 시츄(Shih Tzu) 귀/얼굴 미니멀 라인 -->
+                <path d="M6 15c-1 0-2 1-2 2s1 2 2 2h4" />
+            </svg>
+            <span>LEO TOOLBOX</span>
+        </div>
+        <div>
+            <a href="{% url 'board_list' %}" class="btn btn-primary">💬 도구 커뮤니티 게시판</a>
+            <a href="{% url 'inquiry_list' %}" class="btn btn-pay">❓ 1:1 문의 게시판</a>
+        </div>
     </div>
+
     <div class="container">
         {% if user.is_authenticated %}
             <h2>반갑습니다, {{ user.profile.nickname|default:user.username }}님! 👋</h2>
-            <p>로그인에 성공하셨습니다.</p>
-            <div class="btn-group">
+            <p style="color: var(--text-sub);">로그인에 성공하셨습니다.</p>
+            <div class="btn-group" style="margin-bottom: 20px;">
                 <a href="{% url 'account_logout' %}" class="btn btn-logout">로그아웃</a>
             </div>
         {% else %}
             <h1>환영합니다! 👋</h1>
-            <p>Django로 구축한 서비스입니다. SNS 계정으로 로그인하세요.</p>
+            <p style="color: var(--text-sub);">Django로 구축한 서비스입니다. SNS 계정으로 로그인하세요.</p>
         {% endif %}
     </div>
+
     <!-- 메시지 알림 (성공/경고 등) -->
     {% if messages %}
         <ul class="messages">
@@ -141,21 +380,23 @@
     {% endif %}
 
     <div class="header-box">
-        <h1>🛠️ 나만의 스마트 도구 마켓</h1>
+        <h1 style="margin-top:0;">🛠️ 레오의 비즈니스 도구 마켓</h1>
         {% if user.is_authenticated %}
             <p><strong>{{ user.profile.nickname|default:user.username }}님 환영합니다!</strong></p>
-            <p>내가 고른 무료 도구: 
+            <p>
                 {% if free_tool %}
                     <span class="badge badge-free">{{ free_tool.icon }} {{ free_tool.name }}</span>
                 {% else %}
-                    <span style="color: #ef4444; font-weight: bold;">[미선택] 아래 도구 중 1개를 무료로 선택하세요!</span>
+                    <span style="color: var(--primary-pink); font-weight: bold;">[미선택] 아래 도구 중 1개를 무료로 선택하세요!</span>
                 {% endif %}
             </p>
         {% else %}
-            <p>소셜 로그인하고 원하시는 도구 1개를 무료로 이용해 보세요!</p>
-            <a href="{% provider_login_url 'google' %}" class="btn btn-primary" style="background: #ea4335;">구글 로그인</a>
-            <a href="{% provider_login_url 'kakao' %}" class="btn btn-primary" style="background: #fee500; color: black;">카카오 로그인</a>
-            <a href="{% provider_login_url 'naver' %}" class="btn btn-primary" style="background: #03cf5d;">네이버 로그인</a>
+            <p style="color: var(--text-sub);">소셜 로그인하고 원하시는 도구 1개를 무료로 이용해 보세요!</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <a href="{% provider_login_url 'google' %}" class="btn btn-primary" style="background: #ea4335;">구글 로그인</a>
+                <a href="{% provider_login_url 'kakao' %}" class="btn btn-primary" style="background: #fee500; color: black;">카카오 로그인</a>
+                <a href="{% provider_login_url 'naver' %}" class="btn btn-primary" style="background: #03cf5d;">네이버 로그인</a>
+            </div>
         {% endif %}
     </div>
 
@@ -173,16 +414,16 @@
         </ol>
     </div>
     
-    <p style="color: #9ca3af; font-size: 0.85em;">누적 선택: {{ tool.purchase_count }}회</p>
+    <p style="color: var(--text-sub); font-size: 0.85em;"</p>
     
-    <h2>🧰 전체 도구 목록</h2>
+    <h2 style="margin-top: 30px;">🧰 전체 도구 목록</h2>
     <div class="tool-grid">
         {% for tool in tools %}
             <div class="tool-card">
                 <div>
                     <h3>{{ tool.icon }} {{ tool.name }}</h3>
-                    <p style="color: #4b5563; font-size: 0.95em;">{{ tool.description }}</p>
-                    <p style="color: #9ca3af; font-size: 0.85em;">누적 사용: {{ tool.usage_count }}회</p>
+                    <p style="color: var(--text-sub); font-size: 0.95em;">{{ tool.description }}</p>
+                    <p style="color: var(--text-sub); font-size: 0.85em;">누적 사용: {{ tool.usage_count }}회</p>
                 </div>
 
                 <div style="margin-top: 15px;">
@@ -202,7 +443,6 @@
                             <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%; box-sizing: border-box;">무료 도구로 선택</a>
                         
                         <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
-                        <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
                         {% else %}
                             <button class="btn btn-pay" style="width: 100%; box-sizing: border-box;"
                                     onclick="openPaymentSelectModal('{{ tool.id }}', '{{ tool.name }}', '{{ tool.price|default:1000 }}')">
@@ -218,11 +458,12 @@
             <p>등록된 도구가 없습니다. Admin에서 추가해 주세요!</p>
         {% endfor %}
     </div>
+
     <!-- 💳 결제 수단 선택 모달 (카카오페이 / 네이버페이 전용) -->
     <div id="paymentSelectModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
-        <div style="background: white; padding: 25px; border-radius: 12px; width: 320px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <div class="modal-content" style="background: white; padding: 25px; border-radius: 12px; width: 320px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
             <h3 style="margin-top:0; margin-bottom: 10px;">결제 수단 선택</h3>
-            <p id="modalToolTitle" style="font-weight: bold; color: #4f46e5; margin-bottom: 20px;"></p>
+            <p id="modalToolTitle" style="font-weight: bold; color: var(--primary-pink); margin-bottom: 20px;"></p>
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button type="button" class="btn" style="background-color: #fee500; color: #000; border: none; padding: 12px; font-size: 1em;" onclick="submitPayment('kakaopay')">
@@ -261,4 +502,3 @@
     </script>
 </body>
 </html>
-
