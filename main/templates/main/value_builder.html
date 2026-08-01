@@ -66,8 +66,18 @@
             margin-bottom: 12px;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
         .form-group {
             margin-bottom: 12px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
         }
 
         .form-group label {
@@ -129,6 +139,32 @@
             box-shadow: var(--shadow-md);
         }
 
+        /* LTV 요약 박스 스타일 */
+        .summary-dashboard {
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .summary-item .label {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .summary-item .value {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--accent-rose);
+            margin-top: 4px;
+        }
+
         .visual-ladder {
             display: flex;
             flex-direction: column;
@@ -143,11 +179,23 @@
             padding: 16px 20px;
         }
 
+        .node-metrics {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: var(--accent-rose);
+            font-weight: 600;
+        }
+
         .visual-arrow {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 0.9rem;
             color: var(--primary-pink);
-            margin: -8px 0;
+            font-weight: bold;
+            margin: -4px 0;
         }
 
         .export-btn-group {
@@ -162,10 +210,10 @@
 
     <div class="header-box">
         <div>
-            <h1 style="margin:0 0 8px 0; font-size: 1.5rem;">🪜 비즈니스 가치 체계 설계기</h1>
-            <p style="margin:0; color: var(--text-sub); font-size: 0.9rem;">고객의 신뢰도에 맞춰 1단계부터 4단계까지 가치를 확장하는 사다리를 설계하세요.</p>
+            <h1 style="margin:0 0 8px 0; font-size: 1.5rem;">🪜 비즈니스 가치 체계 & 예상 금액 설계기</h1>
+            <p style="margin:0; color: var(--text-sub); font-size: 0.9rem;">고객 신뢰 사다리와 예상 전환율 및 금액을 계산해보세요.</p>
         </div>
-        <a href="javascript:history.back()" class="btn btn-sub" style="width: auto; padding: 8px 14px; font-size: 0.85rem;">← 돌아가기</a>
+        <a href="javascript:history.back()" class="btn btn-sub" style="width: auto; padding: 8px 14px; font-size: 0.85rem;">← 메인으로</a>
     </div>
 
     <!-- 입력 폼 -->
@@ -175,79 +223,120 @@
             <!-- 1단계 -->
             <div class="step-card">
                 <div class="step-title">1단계: 무료 제안 (Lead Magnet)</div>
-                <div class="form-group">
-                    <label>상품명</label>
-                    <input type="text" id="s1_name" class="input-field" placeholder="예: 0원 체크리스트 / 핵심 노하우 PDF / 무료 체험권">
-                </div>
-                <div class="form-group">
-                    <label>가격</label>
-                    <input type="text" id="s1_price" class="input-field" placeholder="예: 0원">
-                </div>
-                <div class="form-group">
-                    <label>제공 가치</label>
-                    <textarea id="s1_value" class="input-field" placeholder="예: 진입 장벽 없이 고객의 DB(이메일/연락처)를 확보하고 초기 신뢰 형성"></textarea>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>상품명</label>
+                        <input type="text" id="s1_name" class="input-field" placeholder="예: 0원 체크리스트 / PDF">
+                    </div>
+                    <div class="form-group">
+                        <label>가격 (원)</label>
+                        <input type="number" id="s1_price" class="input-field" value="0" placeholder="0">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>예상 초기 유입 고객 수 (명)</label>
+                        <input type="number" id="s1_leads" class="input-field" placeholder="예: 1000" value="1000">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>제공 가치</label>
+                        <textarea id="s1_value" class="input-field" placeholder="예: 진입 장벽 없이 고객의 DB를 확보하고 초기 신뢰 형성"></textarea>
+                    </div>
                 </div>
             </div>
 
             <!-- 2단계 -->
             <div class="step-card">
                 <div class="step-title">2단계: 진입 상품 (Tripwire)</div>
-                <div class="form-group">
-                    <label>상품명</label>
-                    <input type="text" id="s2_name" class="input-field" placeholder="예: VOD 강의 / 미니 템플릿 / 마이크로 웹 도구 단건">
-                </div>
-                <div class="form-group">
-                    <label>가격</label>
-                    <input type="text" id="s2_price" class="input-field" placeholder="예: 1,000원 ~ 10,000원">
-                </div>
-                <div class="form-group">
-                    <label>제공 가치</label>
-                    <textarea id="s2_value" class="input-field" placeholder="예: 부담 없는 소액 결제로 무료 유저를 '구매 고객'으로 전환시키는 경험 제공"></textarea>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>상품명</label>
+                        <input type="text" id="s2_name" class="input-field" placeholder="예: VOD 강의 / 미니 템플릿">
+                    </div>
+                    <div class="form-group">
+                        <label>가격 (원)</label>
+                        <input type="number" id="s2_price" class="input-field" placeholder="예: 10000" value="10000">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>1단계 ➔ 2단계 구매 전환율 (%)</label>
+                        <input type="number" id="s2_conv" class="input-field" placeholder="예: 5" value="5" step="0.1">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>제공 가치</label>
+                        <textarea id="s2_value" class="input-field" placeholder="예: 부담 없는 소액 결제로 무료 유저를 '구매 고객'으로 전환"></textarea>
+                    </div>
                 </div>
             </div>
 
             <!-- 3단계 -->
             <div class="step-card">
                 <div class="step-title">3단계: 핵심 서비스 (Core Offer)</div>
-                <div class="form-group">
-                    <label>상품명</label>
-                    <input type="text" id="s3_name" class="input-field" placeholder="예: 정규 패키지 / 월간 구독 서비스 / 시그니처 전자책">
-                </div>
-                <div class="form-group">
-                    <label>가격</label>
-                    <input type="text" id="s3_price" class="input-field" placeholder="예: 월 29,900원 / 300,000원">
-                </div>
-                <div class="form-group">
-                    <label>제공 가치</label>
-                    <textarea id="s3_value" class="input-field" placeholder="예: 비즈니스의 메인 수익을 창출하며, 고객의 핵심 문제를 지속적으로 해결"></textarea>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>상품명</label>
+                        <input type="text" id="s3_name" class="input-field" placeholder="예: 정규 패키지 / 시그니처 강의">
+                    </div>
+                    <div class="form-group">
+                        <label>가격 (원)</label>
+                        <input type="number" id="s3_price" class="input-field" placeholder="예: 100000" value="100000">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>2단계 ➔ 3단계 구매 전환율 (%)</label>
+                        <input type="number" id="s3_conv" class="input-field" placeholder="예: 20" value="20" step="0.1">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>제공 가치</label>
+                        <textarea id="s3_value" class="input-field" placeholder="예: 비즈니스의 메인 수익을 창출하며, 핵심 문제를 지속 해결"></textarea>
+                    </div>
                 </div>
             </div>
 
             <!-- 4단계 -->
             <div class="step-card">
                 <div class="step-title">4단계: 하이엔드 (High-End Offer)</div>
-                <div class="form-group">
-                    <label>상품명</label>
-                    <input type="text" id="s4_name" class="input-field" placeholder="예: 1:1 컨설팅 / 맞춤형 웹 구축 / VIP 코칭 패키지">
-                </div>
-                <div class="form-group">
-                    <label>가격</label>
-                    <input type="text" id="s4_price" class="input-field" placeholder="예: 1,500,000원부터">
-                </div>
-                <div class="form-group">
-                    <label>제공 가치</label>
-                    <textarea id="s4_value" class="input-field" placeholder="예: 최상위 가치를 원하는 VIP 고객에게 직접적인 성과를 함께 만들어주는 서비스"></textarea>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>상품명</label>
+                        <input type="text" id="s4_name" class="input-field" placeholder="예: 1:1 컨설팅 / VIP 패키지">
+                    </div>
+                    <div class="form-group">
+                        <label>가격 (원)</label>
+                        <input type="number" id="s4_price" class="input-field" placeholder="예: 1000000" value="1000000">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>3단계 ➔ 4단계 구매 전환율 (%)</label>
+                        <input type="number" id="s4_conv" class="input-field" placeholder="예: 10" value="10" step="0.1">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>제공 가치</label>
+                        <textarea id="s4_value" class="input-field" placeholder="예: 최상위 가치를 원하는 VIP 고객에게 직접적 성과 제공"></textarea>
+                    </div>
                 </div>
             </div>
 
         </div>
 
-        <button type="button" class="btn" onclick="renderVisualization()">✨ 가치 체계 시각화하기</button>
+        <button type="button" class="btn" onclick="renderVisualization()">✨ 가치 체계 및 예상 금액 분석하기</button>
     </form>
 
     <!-- 시각화 결과 영역 -->
     <div id="visual-section">
-        <h2 style="margin-top:0;">📊 완성된 비즈니스 가치 사다리</h2>
+        <h2 style="margin-top:0;">📊 비즈니스 가치 체계 & 예상 금액 리포트</h2>
+        
+        <!-- LTV & 매출 요약 대시보드 -->
+        <div class="summary-dashboard">
+            <div class="summary-item">
+                <div class="label">총 예상 리드 수</div>
+                <div class="value" id="res-total-leads">0명</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">총 예상 매출</div>
+                <div class="value" id="res-total-revenue">0원</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">평균 금액</div>
+                <div class="value" id="res-ltv">0원</div>
+            </div>
+        </div>
+
         <div id="ladder-container" class="visual-ladder"></div>
 
         <div class="export-btn-group">
@@ -257,31 +346,99 @@
     </div>
 
     <script>
+    function parseNum(id) {
+        return parseFloat(document.getElementById(id).value) || 0;
+    }
+
+    function formatKRW(number) {
+        return new Intl.NumberFormat('ko-KR').format(Math.round(number)) + '원';
+    }
+
+    function formatNum(number) {
+        return new Intl.NumberFormat('ko-KR').format(Math.round(number)) + '명';
+    }
+
+    function calculateFunnel() {
+        // 1단계
+        const s1_name = document.getElementById('s1_name').value;
+        const s1_price = parseNum('s1_price');
+        const s1_leads = parseNum('s1_leads');
+        const s1_value = document.getElementById('s1_value').value;
+        const s1_rev = s1_price * s1_leads;
+
+        // 2단계
+        const s2_name = document.getElementById('s2_name').value;
+        const s2_price = parseNum('s2_price');
+        const s2_conv = parseNum('s2_conv');
+        const s2_value = document.getElementById('s2_value').value;
+        const s2_users = s1_leads * (s2_conv / 100);
+        const s2_rev = s2_price * s2_users;
+
+        // 3단계
+        const s3_name = document.getElementById('s3_name').value;
+        const s3_price = parseNum('s3_price');
+        const s3_conv = parseNum('s3_conv');
+        const s3_value = document.getElementById('s3_value').value;
+        const s3_users = s2_users * (s3_conv / 100);
+        const s3_rev = s3_price * s3_users;
+
+        // 4단계
+        const s4_name = document.getElementById('s4_name').value;
+        const s4_price = parseNum('s4_price');
+        const s4_conv = parseNum('s4_conv');
+        const s4_value = document.getElementById('s4_value').value;
+        const s4_users = s3_users * (s4_conv / 100);
+        const s4_rev = s4_price * s4_users;
+
+        // 총계 및 LTV
+        const totalRevenue = s1_rev + s2_rev + s3_rev + s4_rev;
+        const ltv = s1_leads > 0 ? totalRevenue / s1_leads : 0;
+
+        return {
+            steps: [
+                { step: '1단계: 무료 제안', name: s1_name, price: s1_price, value: s1_value, users: s1_leads, rev: s1_rev, conv: null },
+                { step: '2단계: 진입 상품', name: s2_name, price: s2_price, value: s2_value, users: s2_users, rev: s2_rev, conv: s2_conv },
+                { step: '3단계: 핵심 서비스', name: s3_name, price: s3_price, value: s3_value, users: s3_users, rev: s3_rev, conv: s3_conv },
+                { step: '4단계: 하이엔드', name: s4_name, price: s4_price, value: s4_value, users: s4_users, rev: s4_rev, conv: s4_conv }
+            ],
+            summary: {
+                totalLeads: s1_leads,
+                totalRevenue: totalRevenue,
+                ltv: ltv
+            }
+        };
+    }
+
     function renderVisualization() {
+        const data = calculateFunnel();
         const container = document.getElementById('ladder-container');
         container.innerHTML = '';
 
-        const steps = [
-            { step: '1단계: 무료 제안', name: document.getElementById('s1_name').value, price: document.getElementById('s1_price').value, value: document.getElementById('s1_value').value },
-            { step: '2단계: 진입 상품', name: document.getElementById('s2_name').value, price: document.getElementById('s2_price').value, value: document.getElementById('s2_value').value },
-            { step: '3단계: 핵심 서비스', name: document.getElementById('s3_name').value, price: document.getElementById('s3_price').value, value: document.getElementById('s3_value').value },
-            { step: '4단계: 하이엔드', name: document.getElementById('s4_name').value, price: document.getElementById('s4_price').value, value: document.getElementById('s4_value').value }
-        ];
+        // 상단 요약 대시보드 업데이트
+        document.getElementById('res-total-leads').innerText = formatNum(data.summary.totalLeads);
+        document.getElementById('res-total-revenue').innerText = formatKRW(data.summary.totalRevenue);
+        document.getElementById('res-ltv').innerText = formatKRW(data.summary.ltv);
 
-        steps.forEach((item, index) => {
+        // 사다리 노드 렌더링
+        data.steps.forEach((item, index) => {
             const node = document.createElement('div');
             node.className = 'visual-step-node';
             node.innerHTML = `
                 <div style="font-weight:bold; color:var(--accent-rose); font-size:0.9rem;">${item.step}</div>
-                <div style="font-size:1.1rem; font-weight:bold; margin:4px 0;">${item.name || '(미입력)'} <span style="font-size:0.9rem; color:var(--primary-pink);">[${item.price || '0원'}]</span></div>
-                <div style="color:var(--text-sub); font-size:0.95rem;">${item.value || '(제공 가치 미입력)'}</div>
+                <div style="font-size:1.1rem; font-weight:bold; margin:4px 0;">${item.name || '(미입력)'} <span style="font-size:0.9rem; color:var(--primary-pink);">[${formatKRW(item.price)}]</span></div>
+                <div style="color:var(--text-sub); font-size:0.95rem; margin-bottom: 8px;">${item.value || '(제공 가치 미입력)'}</div>
+                <div class="node-metrics">
+                    <span>👥 예상 고객 수: <strong>${formatNum(item.users)}</strong></span>
+                    <span>💰 예상 매출: <strong>${formatKRW(item.rev)}</strong></span>
+                </div>
             `;
             container.appendChild(node);
 
-            if (index < steps.length - 1) {
+            if (index < data.steps.length - 1) {
+                const nextConv = data.steps[index + 1].conv;
                 const arrow = document.createElement('div');
                 arrow.className = 'visual-arrow';
-                arrow.innerText = '⬇️';
+                arrow.innerText = `⬇️ (전환율 ${nextConv}%)`;
                 container.appendChild(arrow);
             }
         });
@@ -291,21 +448,24 @@
     }
 
     function getFormData() {
-        return [
-            ["단계", "상품명", "가격", "제공 가치"],
-            ["1단계 (무료 제안)", document.getElementById('s1_name').value, document.getElementById('s1_price').value, document.getElementById('s1_value').value],
-            ["2단계 (진입 상품)", document.getElementById('s2_name').value, document.getElementById('s2_price').value, document.getElementById('s2_value').value],
-            ["3단계 (핵심 서비스)", document.getElementById('s3_name').value, document.getElementById('s3_price').value, document.getElementById('s3_value').value],
-            ["4단계 (하이엔드)", document.getElementById('s4_name').value, document.getElementById('s4_price').value, document.getElementById('s4_value').value]
+        const data = calculateFunnel();
+        const rows = [
+            ["단계", "상품명", "가격", "구매 고객 수", "단계별 예상 매출", "제공 가치"],
+            ...data.steps.map(s => [s.step, s.name, s.price, Math.round(s.users), Math.round(s.rev), s.value]),
+            [],
+            ["총 유입 고객 수", Math.round(data.summary.totalLeads)],
+            ["총 예상 매출", Math.round(data.summary.totalRevenue)],
+            ["고객 1인당 금액", Math.round(data.summary.ltv)]
         ];
+        return rows;
     }
 
     function downloadExcel() {
         const data = getFormData();
         const ws = XLSX.utils.aoa_to_sheet(data);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "가치체계설계");
-        XLSX.writeFile(wb, "비즈니스_가치_체계_설계서.xlsx");
+        XLSX.utils.book_append_sheet(wb, ws, "가치체계_예상금액_설계");
+        XLSX.writeFile(wb, "비즈니스_가치체계_및_예상금액_분석.xlsx");
     }
 
     function copyForGoogleSheets() {

@@ -23,7 +23,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-main);
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             padding: 32px 20px;
             line-height: 1.6;
@@ -182,6 +182,41 @@
             color: var(--text-main);
             margin-bottom: 20px;
         }
+
+        /* 진단 카드 및 요약표 스타일 */
+        .assessment-card {
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            color: #333333;
+            box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
+        }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .custom-table th, .custom-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: center;
+        }
+
+        .custom-table th {
+            background-color: var(--bg-subtle);
+            color: var(--accent-rose);
+            font-weight: 700;
+        }
+
+        .alert-warning-text {
+            color: #d9534f;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -193,7 +228,7 @@
                 🌸 {{ tool.name|default:"비즈니스 재무 자금관리" }}
             </h1>
             <p style="margin:0; color: var(--text-sub); font-size: 0.9rem;">
-                매출액을 5개의 전용 통장에 체계적으로 분배하고 재무 흐름을 기록하세요.
+                매출 분배 계산과 12개월 재무 건전성 진단을 한눈에 파악하세요.
             </p>
         </div>
         <a href="{% url 'index' %}" class="btn btn-sub" style="width: auto; padding: 8px 16px; font-size: 0.85rem;">← 메인으로</a>
@@ -266,9 +301,111 @@
         </div>
     </div>
 
+    <!-- Part 2: 12개월 재무 건전성 진단 (Financial Health Assessment) -->
+    <div class="card">
+        <div class="card-title">🔍 Part 2. 12개월 재무 건전성 진단</div>
+        <p style="font-size: 0.9rem; color: var(--text-sub); margin-bottom: 20px;">
+            지난 12개월 동안의 실제 재무 성과를 바탕으로 목표 대비 과부족 상태를 진단합니다.
+        </p>
+
+        <div class="grid-2">
+            <!-- A열: 실제 재무 데이터 -->
+            <div>
+                <h4 style="color: var(--accent-rose); margin-top:0;">📊 지난 12개월 실제 재무 데이터 (A)</h4>
+                <div class="form-group">
+                    <label for="a1_rev">A1. 12개월 총 매출액 (원)</label>
+                    <input type="number" id="a1_rev" class="input-field" value="120000000" step="1000000" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="a2_cost">A2. 12개월 재료비/하도급비 (원)</label>
+                    <input type="number" id="a2_cost" class="input-field" value="20000000" step="1000000" oninput="runAssessment()">
+                </div>
+                
+                <div class="guide-box" style="margin-bottom: 12px; border-left-color: var(--accent-rose);">
+                    💡 <strong>A3. 실질 순매출 (A1 - A2):</strong> <span id="a3_real_val">100,000,000원</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="a4_profit">A4. 실제 수익 적립금 (원)</label>
+                    <input type="number" id="a4_profit" class="input-field" value="5000000" step="100000" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="a5_owner">A5. 실제 대표 급여/보상 (원)</label>
+                    <input type="number" id="a5_owner" class="input-field" value="35000000" step="500000" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="a6_tax">A6. 실제 납부 세금 (원)</label>
+                    <input type="number" id="a6_tax" class="input-field" value="10000000" step="500000" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="a7_opex">A7. 실제 운영비 지출 (원)</label>
+                    <input type="number" id="a7_opex" class="input-field" value="50000000" step="1000000" oninput="runAssessment()">
+                </div>
+                <div id="actual_sum_warning" class="alert-warning-text"></div>
+            </div>
+
+            <!-- B열: 목표 배분 비율 설정 -->
+            <div>
+                <h4 style="color: var(--accent-rose); margin-top:0;">🎯 목표 배분 비율 설정 (B)</h4>
+                <div class="form-group">
+                    <label for="b4_ratio">B4. 수익(Profit) 목표 비율 (%)</label>
+                    <input type="number" id="b4_ratio" class="input-field" value="10" min="0" max="100" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="b5_ratio">B5. 오너 보상(Owner's Comp) 목표 비율 (%)</label>
+                    <input type="number" id="b5_ratio" class="input-field" value="45" min="0" max="100" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="b6_ratio">B6. 세금(Tax) 목표 비율 (%)</label>
+                    <input type="number" id="b6_ratio" class="input-field" value="15" min="0" max="100" oninput="runAssessment()">
+                </div>
+                <div class="form-group">
+                    <label for="b7_ratio">B7. 운영비(OPEX) 목표 비율 (%)</label>
+                    <input type="number" id="b7_ratio" class="input-field" value="30" min="0" max="100" oninput="runAssessment()">
+                </div>
+                <div id="ratio_sum_warning" class="alert-warning-text"></div>
+
+                <div class="form-group" style="margin-top: 24px;">
+                    <label for="assess_memo">진단 기록용 메모</label>
+                    <input type="text" id="assess_memo" class="input-field" value="{{ today_date }} 정기 재무 건전성 진단">
+                </div>
+            </div>
+        </div>
+
+        <!-- 진단 피드백 카드 영역 -->
+        <h4 style="color: var(--accent-rose); margin-top: 20px;">🐾 재무 건전성 진단 피드백</h4>
+        <div id="assessment_cards" class="grid-2">
+            <!-- 자바스크립트로 카드가 생성됩니다 -->
+        </div>
+
+        <!-- 진단 요약표 -->
+        <h4 style="color: var(--accent-rose); margin-top: 20px;">📋 12개월 재무 진단 요약표</h4>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>목표 비율 (B)</th>
+                    <th>실제 지출액 (A)</th>
+                    <th>원칙 목표액 (C)</th>
+                    <th>차이 (D)</th>
+                    <th>처방 조치 (E)</th>
+                </tr>
+            </thead>
+            <tbody id="assessment_summary_body">
+                <!-- 자바스크립트로 행이 생성됩니다 -->
+            </tbody>
+        </table>
+
+        <!-- 액션 버튼 -->
+        <div class="grid-2" style="margin-top: 20px;">
+            <button type="button" class="btn btn-sub" onclick="downloadAssessExcel()">📊 진단 결과 엑셀 다운로드</button>
+            <button type="button" class="btn" onclick="copyAssessForGoogleSheet()">📋 진단 결과 구글 시트 복사</button>
+        </div>
+    </div>
+
     <!-- 스크립트 로직 -->
     <script>
-        // 1. 실시간 금액 계산 로직
+        // --- Part 1: 실시간 분배 계산 ---
         function calculateDistribution() {
             const rev = parseFloat(document.getElementById('total_revenue').value) || 0;
             const p = parseFloat(document.getElementById('r_profit').value) || 0;
@@ -282,7 +419,6 @@
             document.getElementById('m_opex').innerText = Math.round(rev * (x / 100)).toLocaleString() + '원';
         }
 
-        // 2. 구글 시트 붙여넣기용 클립보드 복사 함수 (TSV 구분 포맷)
         function copyForGoogleSheet() {
             const today = "{{ today_date }}";
             const rev = document.getElementById('total_revenue').value;
@@ -292,40 +428,199 @@
             const opex = document.getElementById('m_opex').innerText;
             const memo = document.getElementById('dist_memo').value;
 
-            // 탭 문자(\t)로 연동하면 구글 시트에서 열 분리가 자동으로 됩니다.
             const rowData = `${today}\t${rev}\t${profit}\t${owner}\t${tax}\t${opex}\t${memo}`;
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(rowData).then(() => {
-                    alert("클립보드에 복사되었습니다!\n구글 시트의 원하는 셀을 클릭하고 Ctrl + V 하세요. 🌸");
-                }).catch(err => {
-                    fallbackCopy(rowData);
-                });
-            } else {
-                fallbackCopy(rowData);
-            }
+            executeCopy(rowData, "구글 시트용 실시간 분배 데이터가 복사되었습니다!");
         }
 
-        // 구형 브라우저 및 비보안 환경(HTTP) 폴백 처리
-        function fallbackCopy(text) {
-            const dummy = document.createElement("textarea");
-            document.body.appendChild(dummy);
-            dummy.value = text;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-            alert("클립보드에 복사되었습니다!\n구글 시트에 붙여넣기(Ctrl + V) 하세요. 🌸");
-        }
-
-        // 3. 엑셀 파일 다운로드 API 요청
         function downloadDistExcel() {
             const rev = document.getElementById('total_revenue').value;
             const memo = encodeURIComponent(document.getElementById('dist_memo').value);
             window.location.href = `/tools/profit-flow/download/?type=distribution&total_rev=${rev}&memo=${memo}`;
         }
 
-        // 페이지 로드 시 초기 계산 1회 실행
-        document.addEventListener('DOMContentLoaded', calculateDistribution);
+        // --- Part 2: 재무 건전성 진단 계산 ---
+        let currentEvalData = [];
+
+        function runAssessment() {
+            const a1 = parseFloat(document.getElementById('a1_rev').value) || 0;
+            const a2 = parseFloat(document.getElementById('a2_cost').value) || 0;
+            const a3 = a1 - a2;
+
+            document.getElementById('a3_real_val').innerText = a3.toLocaleString() + '원';
+
+            const a4 = parseFloat(document.getElementById('a4_profit').value) || 0;
+            const a5 = parseFloat(document.getElementById('a5_owner').value) || 0;
+            const a6 = parseFloat(document.getElementById('a6_tax').value) || 0;
+            const a7 = parseFloat(document.getElementById('a7_opex').value) || 0;
+
+            const actualSum = a4 + a5 + a6 + a7;
+            const actualSumWarning = document.getElementById('actual_sum_warning');
+            if (actualSum !== a3) {
+                actualSumWarning.innerText = `⚠️ A4~A7 항목의 합계(${actualSum.toLocaleString()}원)가 실질 순매출(A3: ${a3.toLocaleString()}원)과 일치하지 않습니다.`;
+            } else {
+                actualSumWarning.innerText = "";
+            }
+
+            const b4 = parseFloat(document.getElementById('b4_ratio').value) || 0;
+            const b5 = parseFloat(document.getElementById('b5_ratio').value) || 0;
+            const b6 = parseFloat(document.getElementById('b6_ratio').value) || 0;
+            const b7 = parseFloat(document.getElementById('b7_ratio').value) || 0;
+
+            const ratioSum = b4 + b5 + b6 + b7;
+            const ratioSumWarning = document.getElementById('ratio_sum_warning');
+            if (ratioSum !== 100) {
+                ratioSumWarning.innerText = `⚠️ 목표 비율의 합이 ${ratioSum}%입니다. 100%가 되도록 조정해주세요!`;
+            } else {
+                ratioSumWarning.innerText = "✅ 목표 비율 합계 100% 정상 세팅";
+                ratioSumWarning.style.color = "#28a745";
+            }
+
+            const c4 = a3 * (b4 / 100);
+            const c5 = a3 * (b5 / 100);
+            const c6 = a3 * (b6 / 100);
+            const c7 = a3 * (b7 / 100);
+
+            const d4 = a4 - c4;
+            const d5 = a5 - c5;
+            const d6 = a6 - c6;
+            const d7 = a7 - c7;
+
+            currentEvalData = [
+                { category: "수익 (Profit)", actual: a4, ratio: b4, target: c4, diff: d4, isOpex: false },
+                { category: "오너 보상 (Owner's Comp)", actual: a5, ratio: b5, target: c5, diff: d5, isOpex: false },
+                { category: "세금 (Tax)", actual: a6, ratio: b6, target: c6, diff: d6, isOpex: false },
+                { category: "운영비 (OPEX)", actual: a7, ratio: b7, target: c7, diff: d7, isOpex: true }
+            ];
+
+            renderAssessmentCards();
+            renderAssessmentSummary();
+        }
+
+        function renderAssessmentCards() {
+            const container = document.getElementById('assessment_cards');
+            container.innerHTML = "";
+
+            currentEvalData.forEach(item => {
+                let cardColor = "";
+                let borderColor = "";
+                let description = "";
+
+                if (item.diff < 0) {
+                    const actionStatus = "증가";
+                    if (item.isOpex) {
+                        cardColor = "#D4EDDA";
+                        borderColor = "#C3E6CB";
+                        description = `🎉 <b>훌륭합니다!</b> 운영비가 목표보다 <b>${Math.round(Math.abs(item.diff)).toLocaleString()}원</b> 절감되었습니다.`;
+                    } else {
+                        cardColor = "#FFF3CD";
+                        borderColor = "#FFEEBA";
+                        description = `⚠️ <b>조정 제안 (${actionStatus})</b>: 해당 항목이 목표보다 <b>${Math.round(Math.abs(item.diff)).toLocaleString()}원</b> 부족합니다. 배분율을 <b>${actionStatus}</b>시켜야 합니다!`;
+                    }
+                } else {
+                    const actionStatus = "감소";
+                    if (item.isOpex) {
+                        cardColor = "#FFD2D2";
+                        borderColor = "#FF8080";
+                        description = `🚨 <b>과다 지출 (${actionStatus} 필요)</b>: 운영비가 목표보다 <b>${Math.round(item.diff).toLocaleString()}원</b> 초과 사용되었습니다!`;
+                    } else {
+                        cardColor = "#D4EDDA";
+                        borderColor = "#C3E6CB";
+                        description = `✅ <b>안전</b>: 목표보다 <b>${Math.round(item.diff).toLocaleString()}원</b> 더 든든하게 비축되어 있어 여유롭습니다!`;
+                    }
+                }
+
+                const diffFormatted = (item.diff > 0 ? "+" : "") + Math.round(item.diff).toLocaleString();
+
+                const cardHtml = `
+                    <div class="assessment-card" style="background-color: ${cardColor}; border: 1px solid ${borderColor};">
+                        <h4 style="margin: 0 0 8px 0; color: #4A1E27;">${item.category} (목표비율: ${item.ratio}%)</h4>
+                        <p style="margin: 0; font-size: 0.9rem; line-height: 1.5;">
+                            📍 <b>12개월 실제 (A):</b> ${Math.round(item.actual).toLocaleString()} 원<br>
+                            📍 <b>원칙 목표 (C):</b> ${Math.round(item.target).toLocaleString()} 원<br>
+                            📍 <b>차이 금액 (D):</b> ${diffFormatted} 원<br>
+                            ✨ <b>진단 피드백:</b> ${description}
+                        </p>
+                    </div>
+                `;
+                container.innerHTML += cardHtml;
+            });
+        }
+
+        function renderAssessmentSummary() {
+            const tbody = document.getElementById('assessment_summary_body');
+            tbody.innerHTML = "";
+
+            currentEvalData.forEach(item => {
+                const action = item.diff < 0 ? "증가 필요" : "감소/통제 필요";
+                const diffFormatted = (item.diff > 0 ? "+" : "") + Math.round(item.diff).toLocaleString();
+
+                const tr = `
+                    <tr>
+                        <td><b>${item.category}</b></td>
+                        <td>${item.ratio}%</td>
+                        <td>${Math.round(item.actual).toLocaleString()} 원</td>
+                        <td>${Math.round(item.target).toLocaleString()} 원</td>
+                        <td>${diffFormatted} 원</td>
+                        <td><b>${action}</b></td>
+                    </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        function copyAssessForGoogleSheet() {
+            const today = "{{ today_date }}";
+            const a1 = document.getElementById('a1_rev').value;
+            const a2 = document.getElementById('a2_cost').value;
+            const a3 = parseFloat(a1) - parseFloat(a2);
+            const memo = document.getElementById('assess_memo').value;
+
+            let rows = [];
+            currentEvalData.forEach(item => {
+                const action = item.diff < 0 ? "증가 필요" : "감소/통제 필요";
+                const diffFormatted = (item.diff > 0 ? "+" : "") + Math.round(item.diff);
+                rows.push(`${today}\t${a1}\t${a2}\t${a3}\t${item.category}\t${Math.round(item.actual)}\t${item.ratio}%\t${Math.round(item.target)}\t${diffFormatted}\t${memo} (${action})`);
+            });
+
+            const tsvData = rows.join("\n");
+            executeCopy(tsvData, "진단 결과 4개 항목이 구글 시트 복사용(TSV)으로 복사되었습니다!");
+        }
+
+        function downloadAssessExcel() {
+            const a1 = document.getElementById('a1_rev').value;
+            const a2 = document.getElementById('a2_cost').value;
+            const memo = encodeURIComponent(document.getElementById('assess_memo').value);
+            window.location.href = `/tools/profit-flow/download/?type=assessment&a1=${a1}&a2=${a2}&memo=${memo}`;
+        }
+
+        // 공통 클립보드 복사 함수
+        function executeCopy(text, successMsg) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(successMsg + "\n구글 시트의 원하는 셀에 Ctrl + V 하세요. 🌸");
+                }).catch(() => {
+                    fallbackCopy(text, successMsg);
+                });
+            } else {
+                fallbackCopy(text, successMsg);
+            }
+        }
+
+        function fallbackCopy(text, successMsg) {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert(successMsg + "\n구글 시트에 붙여넣기(Ctrl + V) 하세요. 🌸");
+        }
+
+        // 초기 계산 로드
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateDistribution();
+            runAssessment();
+        });
     </script>
 </body>
 </html>

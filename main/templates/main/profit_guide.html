@@ -107,6 +107,22 @@
             border-radius: 4px;
             font-size: 0.9em;
         }
+
+        .btn-action {
+            display: inline-block;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-pink);
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.05rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 30px;
+            box-sizing: border-box;
+        }
+        .btn-action:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -117,7 +133,7 @@
                 📖 비즈니스 재무 자금관리 가이드
             </h1>
             <p style="margin:0; color: var(--text-sub); font-size: 0.9rem;">
-                수익금을 먼저 챙기는 비즈니스 재무 자금관리 핵심 가이드
+                비즈니스 재무 자금관리 및 재무 건전성 진단 핵심 가이드
             </p>
         </div>
         <a href="{% url 'index' %}" class="btn">← 메인으로</a>
@@ -153,13 +169,28 @@
     </div>
 
     <div class="card">
+        <div class="card-title">🔍 12개월 재무 건전성 진단 가이드</div>
+        <p>
+            단순히 매 회차 분배만 수행하는 것에 그치지 않고, 지난 <strong>12개월간의 실질 순매출(총 매출액 - 재료비/하도급비)</strong> 대비 4개 항목의 실제 집행 금액을 원칙 목표와 비교합니다.
+        </p>
+        <ul class="step-list">
+            <li class="step-item">
+                <strong>수익/오너보상/세금 부족 시:</strong> 해당 통장으로의 배분 비율을 늘릴 수 있도록 비용 구조를 개편해야 합니다.
+            </li>
+            <li class="step-item">
+                <strong>운영비 초과 지출 시:</strong> 비즈니스 구조상 과도한 고정비/변동비가 지출되고 있으므로 즉각적인 지출 통제가 필요합니다.
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
         <div class="card-title">🚀 실정 적용 3단계 팁</div>
         <p>1. 정기적으로(매월 10일, 25일 등) 입금된 매출액을 4개 통장 비율에 맞게 분배합니다.</p>
-        <p>2. 분배 도구를 활용해 계산 후 <strong>📋 구글 시트 복사하기</strong> 기능으로 본인의 장부에 기록하세요.</p>
+        <p>2. 분배 및 진단 도구를 활용해 계산 후 <strong>📊 엑셀 다운로드 📋 구글 시트 복사하기</strong> 기능으로 본인의 장부에 기록하세요.</p>
         <p>3. 운영비 통장 잔액 내에서만 지출하도록 통제하면, 이익이 지속적으로 쌓이는 건전한 비즈니스가 완성됩니다.</p>
     </div>
-    <div class="card">
-    <a href="{% url 'run_tool' tool.id %}" class="btn-action">🚀 내 비즈니스 재무 자금관리 직접 설계하러 가기</a>
-    </div>
+
+    <a href="{% url 'run_tool' tool.id %}" class="btn-action">🚀 내 비즈니스 재무 자금관리 및 건전성 진단하러 가기</a>
+
 </body>
 </html>

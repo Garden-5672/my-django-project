@@ -109,7 +109,7 @@ def tool_guide(request, tool_id):
     if "재무" in tool.name or tool_id == 1:
         return render(request, 'main/profit_guide.html', {'tool': tool})
     
-    return render(request, 'default_guide.html', {'tool': tool})
+    return render(request, 'main/tool_guide.html', {'tool': tool})
 
 
 # 5. 동적 도구 실행 뷰 (권한 검증 및 사용량 증가)
@@ -138,7 +138,7 @@ def run_tool(request, tool_id):
     if "재무" in tool.name or tool_id == 1:
         return render(request, 'main/profit_flow.html', context)
     
-    return render(request, 'default_run.html', context)
+    return render(request, 'main/value_builder.html', context)
 
 
 # 6. 엑셀 다운로드 API
