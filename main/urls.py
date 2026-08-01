@@ -12,4 +12,7 @@ urlpatterns = [
     path('inquiry/', views.inquiry_list, name='inquiry_list'),
     path('inquiry/create/', views.inquiry_create, name='inquiry_create'), # 문의하기 추가
     path('download/template/', views.download_excel_template, name='download_excel_template'),
+    path('value-builder/', views.value_builder, name='value_builder'),
+    path('tools/<int:tool_id>/guide/', views.tool_guide, name='tool_guide'),
+    path('tools/<int:tool_id>/run/', views.run_tool, name='run_tool'),
 ]

@@ -6,23 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI & IT 마이크로 도구 플랫폼</title>
 
-    <!-- 1. 포트원 V2 SDK 불러오기 (이 줄이 requestPay 함수보다 위에 있어야 합니다!) -->
+    <!-- 1. 포트원 V2 SDK 불러오기 -->
     <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 
     <script>
     // 💡 [설정] 결제 수단별 포트원 채널 키 관리
     const PORTONE_CONFIG = {
-        STORE_ID: "store-cae165c9-656f-4342-b7ec-677b8d71ccab", // 가온님의 Store ID 입력
+        STORE_ID: "store-cae165c9-656f-4342-b7ec-677b8d71ccab", 
         CHANNEL_KEYS: {
             kakaopay: "channel-key-5d31fd2b-c8c4-48c4-81d7-1876ad8555a1", // 카카오페이 테스트 키[cite: 2]
-            naverpay: "" // 👈 나중에 네이버페이 채널 키가 발급되면 여기에 "channel-key-xxx"만 입력하세요!
+            naverpay: "" // 네이버페이 채널 키
         }
     };
 
     async function requestPay(toolId, toolName, toolPrice, provider) {
         const channelKey = PORTONE_CONFIG.CHANNEL_KEYS[provider];
 
-        // 💡 네이버페이 키가 아직 없을 때 예외 처리
         if (!channelKey) {
             if (provider === 'naverpay') {
                 alert("네이버페이 연동 준비 중입니다. 카카오페이 결제를 이용해 주세요!");
@@ -33,7 +32,6 @@
         }
 
         try {
-            // 포트원 V2 결제 요청
             const response = await PortOne.requestPayment({
                 storeId: PORTONE_CONFIG.STORE_ID,
                 channelKey: channelKey,
@@ -41,18 +39,16 @@
                 orderName: toolName,
                 totalAmount: toolPrice,
                 currency: "CURRENCY_KRW",
-                payMethod: "EASY_PAY", // V2 간편결제 규격
+                payMethod: "EASY_PAY",
                 customer: {
                     fullName: "{{ user.profile.nickname|default:user.username }}",
                 },
             });
 
-            // 결제 실패/취소 시
             if (response.code !== undefined) {
                 return alert(`결제 실패: ${response.message}`);
             }
 
-            // 백엔드(Django) 검증 및 해금 요청 (카카오/네이버 모두 동일한 백엔드 API 사용)
             const serverResponse = await fetch("/complete-payment/", {
                 method: "POST",
                 headers: {
@@ -68,7 +64,7 @@
             const result = await serverResponse.json();
             if (result.status === 'success') {
                 alert(result.message);
-                location.reload(); // 성공 시 페이지 새로고침
+                location.reload();
             } else {
                 alert(`처리 실패: ${result.message}`);
             }
@@ -79,16 +75,14 @@
         }
     }
 
-    // 버튼 클릭 이벤트 바인딩
     document.addEventListener("DOMContentLoaded", function() {
         const payButtons = document.querySelectorAll(".btn-request-pay");
-
         payButtons.forEach(button => {
             button.addEventListener("click", function() {
                 const toolId = this.dataset.id;
                 const toolName = this.dataset.name;
                 const toolPrice = parseInt(this.dataset.price);
-                const provider = this.dataset.provider; // kakaopay 또는 naverpay
+                const provider = this.dataset.provider;
 
                 requestPay(toolId, toolName, toolPrice, provider);
             });
@@ -98,41 +92,38 @@
 
     <style>
         /* ==========================================================================
-           Design System: Option C - Pink Minimalist Emblem Theme
+           Design System: Pink Minimalist Emblem Theme
            ========================================================================== */
         :root {
-            /* [Light Mode - Pink Tone] */
-            --bg-primary: #fff5f7;        /* 은은한 피치 핑크 배경 */
-            --bg-surface: #ffffff;        /* 순백색 카드 배경 */
-            --bg-subtle: #fce8ed;         /* 연핑크 호버/강조 영역 */
+            --bg-primary: #fff5f7;        
+            --bg-surface: #ffffff;        
+            --bg-subtle: #fce8ed;         
             
-            --text-main: #2b1b22;         /* 다크 핑크/버건디 톤 어두운 텍스트 */
-            --text-sub: #8a6d7b;          /* 소프트 로즈 브라운 텍스트 */
-            --border-color: #f7d4dc;      /* 연한 핑크 테두리선 */
+            --text-main: #2b1b22;         
+            --text-sub: #8a6d7b;          
+            --border-color: #f7d4dc;      
 
-            /* Point Colors (Pink Palette) */
-            --primary-pink: #e85d88;      /* 체리 블라썸 핑크 (메인 버튼/포인트) */
-            --accent-rose: #c84168;       /* 딥 로즈 핑크 (강조/테두리) */
-            --soft-pink: #fdf0f3;         /* 연한 핑크 배지 */
+            --primary-pink: #e85d88;      
+            --accent-rose: #c84168;       
+            --soft-pink: #fdf0f3;         
 
             --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
             --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
             --radius: 12px;
         }
 
-        /* [Dark Mode - Dark Pink & Magenta Tone] */
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg-primary: #1a1215;      /* 딥 플럼/다크 핑크 매트 배경 */
-                --bg-surface: #261a20;      /* 다크 로즈 카드 배경 */
+                --bg-primary: #1a1215;      
+                --bg-surface: #261a20;      
                 --bg-subtle: #38242f;
                 
-                --text-main: #fde8ed;        /* 연한 핑크빛 오프화이트 텍스트 */
+                --text-main: #fde8ed;        
                 --text-sub: #c4a3b1;
                 --border-color: #402835;
 
-                --primary-pink: #f0789d;     /* 네온 체리 핑크 */
-                --accent-rose: #f48fb1;      /* 소프트 파스텔 핑크 */
+                --primary-pink: #f0789d;     
+                --accent-rose: #f48fb1;      
                 --soft-pink: #331f29;
 
                 --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -140,7 +131,6 @@
             }
         }
 
-        /* 수동 다크모드 토글 지원 */
         body.dark-mode {
             --bg-primary: #1a1215;
             --bg-surface: #261a20;
@@ -166,7 +156,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Top Header & Emblem Logo */
         .top-navbar {
             display: flex;
             justify-content: space-between;
@@ -192,7 +181,6 @@
             stroke-linejoin: round;
         }
 
-        /* Boxes & Cards */
         .header-box { 
             background: var(--bg-surface); 
             padding: 24px; 
@@ -220,7 +208,7 @@
 
         .tool-grid { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
             gap: 20px; 
         }
 
@@ -248,16 +236,19 @@
 
         /* Buttons */
         .btn { 
-            display: inline-block; 
-            padding: 10px 18px; 
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            padding: 10px 14px; 
             text-decoration: none; 
-            border-radius: 6px; 
-            font-weight: 500; 
-            font-size: 0.9rem;
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 0.88rem;
             text-align: center; 
             cursor: pointer; 
             border: none; 
             transition: opacity 0.2s ease, background-color 0.2s ease;
+            box-sizing: border-box;
         }
 
         .btn-primary { 
@@ -272,10 +263,20 @@
         }
         .btn-success:hover { opacity: 0.9; }
 
+        .btn-secondary {
+            background: var(--bg-subtle);
+            color: var(--primary-pink);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary-pink);
+        }
+
         .btn-pay { 
             background: transparent; 
             color: var(--primary-pink); 
             border: 1px solid var(--primary-pink);
+            width: 100%;
         }
         .btn-pay:hover { 
             background: var(--bg-subtle); 
@@ -286,6 +287,7 @@
             color: var(--text-sub); 
             cursor: not-allowed; 
             border: 1px solid var(--border-color);
+            width: 100%;
         }
 
         .btn-logout {
@@ -294,6 +296,19 @@
             border: 1px solid var(--border-color);
         }
         .btn-logout:hover { background: var(--bg-subtle); }
+
+        /* 💡 2개 버튼 분할 레이아웃 Grid */
+        .action-button-group {
+            display: flex;
+            flex-direction: column; /* 위아래 세로 정렬 */
+            gap: 8px;              /* 버튼 간격 */
+            width: 100%;
+        }
+
+        .action-button-group .btn {
+            width: 100%;           /* 너비 전체 사용 */
+            box-sizing: border-box;
+        }
 
         /* Badges */
         .badge { 
@@ -314,16 +329,6 @@
             border: 1px solid var(--accent-rose);
         }
 
-        /* Messages */
-        .messages { list-style: none; padding: 0; margin-bottom: 15px; }
-        .messages li { 
-            padding: 12px 16px; 
-            background: var(--primary-pink); 
-            color: white; 
-            border-radius: 6px; 
-            margin-bottom: 8px; 
-        }
-
         /* Modal Theme Adjustments */
         .modal-content {
             background: var(--bg-surface) !important;
@@ -338,22 +343,18 @@
     <!-- 상단 엠블럼 로고 및 커뮤니티 버튼 영역 -->
     <div class="top-navbar">
         <div class="logo-emblem">
-            <!-- 시츄 + 칼 + 꽃 미니멀 라인아트 SVG 엠블럼 -->
             <svg class="emblem-icon" viewBox="0 0 24 24">
-                <!-- 검(Blade) Line -->
                 <path d="M14.5 17.5L3 6V3h3l11.5 11.5" />
                 <path d="M13 19l2 2 2-2-2-2z" />
-                <!-- 꽃(Flower) Line -->
                 <circle cx="18" cy="6" r="2" />
                 <path d="M18 2a4 4 0 0 0-4 4c0 2 4 6 4 6s4-4 4-6a4 4 0 0 0-4-4z" />
-                <!-- 시츄(Shih Tzu) 귀/얼굴 미니멀 라인 -->
                 <path d="M6 15c-1 0-2 1-2 2s1 2 2 2h4" />
             </svg>
             <span>LEO TOOLBOX</span>
         </div>
         <div>
             <a href="{% url 'board_list' %}" class="btn btn-primary">💬 도구 커뮤니티 게시판</a>
-            <a href="{% url 'inquiry_list' %}" class="btn btn-pay">❓ 1:1 문의 게시판</a>
+            <a href="{% url 'inquiry_list' %}" class="btn btn-secondary">❓ 1:1 문의 게시판</a>
             {% if user.is_authenticated %}
                 <a href="{% url 'account_logout' %}" class="btn btn-logout">로그아웃</a>
             {% endif %}
@@ -368,15 +369,6 @@
             <p style="color: var(--text-sub);">SNS 계정으로 로그인 후 이용해 주세요.</p>
         {% endif %}
     </div>
-
-    <!-- 메시지 알림 (성공/경고 등) -->
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
     <div class="header-box">
         <h1 style="margin-top:0;">🛠️ 레오의 비즈니스 도구 마켓</h1>
@@ -399,7 +391,7 @@
         {% endif %}
     </div>
 
-    <!-- 🏆 인기 도구 실시간 순위표 (Leaderboard) -->
+    <!-- 🏆 인기 도구 실시간 순위표 -->
     <div class="ranking-box">
         <h2>🏆 가장 인기 있는 도구 TOP 3 (선택/구매 순위)</h2>
         <ol style="margin: 0; padding-left: 20px;">
@@ -413,8 +405,6 @@
         </ol>
     </div>
     
-    <p style="color: var(--text-sub); font-size: 0.85em;"</p>
-    
     <h2 style="margin-top: 30px;">🧰 전체 도구 목록</h2>
     <div class="tool-grid">
         {% for tool in tools %}
@@ -427,29 +417,37 @@
 
                 <div style="margin-top: 15px;">
                     {% if user.is_authenticated %}
+                        
                         <!-- 1. 내가 선택한 무료 도구인 경우 -->
                         {% if free_tool and free_tool.id == tool.id %}
-                            <span class="badge badge-free" style="margin-bottom: 8px; display: block; text-align: center;">내 무료 도구</span>
-                            <a href="{% url 'run_tool' tool.id %}" class="btn btn-success" style="width: 100%; box-sizing: border-box;">실행하기</a>
-                        
+                            <span class="badge badge-free" style="margin-bottom: 8px; display: block; text-align: center;">내 무료 선택 도구</span>
+                            <div class="action-button-group">
+                                <a href="{% url 'tool_guide' tool.id %}" class="btn btn-secondary">📖 가이드</a>
+                                <a href="{% url 'run_tool' tool.id %}" class="btn btn-success">🚀 실행하기</a>
+                            </div>
+
                         <!-- 2. 내 유료 결제 도구인 경우 -->
                         {% elif tool.id in paid_tool_ids %}
                             <span class="badge badge-top" style="margin-bottom: 8px; display: block; text-align: center;">구매 완료</span>
-                            <a href="{% url 'run_tool' tool.id %}" class="btn btn-success" style="width: 100%; box-sizing: border-box;">실행하기</a>
-                        
+                            <div class="action-button-group">
+                                <a href="{% url 'tool_guide' tool.id %}" class="btn btn-secondary">📖 가이드</a>
+                                <a href="{% url 'run_tool' tool.id %}" class="btn btn-success">🚀 실행하기</a>
+                            </div>
+
                         <!-- 3. 아직 무료 도구를 고르지 않은 경우 -->
                         {% elif not free_tool %}
-                            <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%; box-sizing: border-box;">무료 도구로 선택</a>
-                        
+                            <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%;">🎁 무료 도구로 선택</a>
+
                         <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
                         {% else %}
-                            <button class="btn btn-pay" style="width: 100%; box-sizing: border-box;"
+                            <button class="btn btn-pay"
                                     onclick="openPaymentSelectModal('{{ tool.id }}', '{{ tool.name }}', '{{ tool.price|default:1000 }}')">
-                                💳 결제하기
+                                💳 결제하기 ({{ tool.price|default:1000 }}원)
                             </button>
                         {% endif %}
+
                     {% else %}
-                        <span class="btn btn-disabled" style="width: 100%; box-sizing: border-box;">로그인 필요</span>
+                        <span class="btn btn-disabled">로그인 필요</span>
                     {% endif %}
                 </div>
             </div>
@@ -458,29 +456,28 @@
         {% endfor %}
     </div>
 
-    <!-- 💳 결제 수단 선택 모달 (카카오페이 / 네이버페이 전용) -->
+    <!-- 💳 결제 수단 선택 모달 -->
     <div id="paymentSelectModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
-        <div class="modal-content" style="background: white; padding: 25px; border-radius: 12px; width: 320px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <div class="modal-content" style="padding: 25px; border-radius: 12px; width: 320px; text-align: center;">
             <h3 style="margin-top:0; margin-bottom: 10px;">결제 수단 선택</h3>
             <p id="modalToolTitle" style="font-weight: bold; color: var(--primary-pink); margin-bottom: 20px;"></p>
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button type="button" class="btn" style="background-color: #fee500; color: #000; border: none; padding: 12px; font-size: 1em;" onclick="submitPayment('kakaopay')">
+                <button type="button" class="btn" style="background-color: #fee500; color: #000;" onclick="submitPayment('kakaopay')">
                     🟡 카카오페이 결제
                 </button>
-                <button type="button" class="btn" style="background-color: #03cf5d; color: #fff; border: none; padding: 12px; font-size: 1em;" onclick="submitPayment('naverpay')">
+                <button type="button" class="btn" style="background-color: #03cf5d; color: #fff;" onclick="submitPayment('naverpay')">
                     🟢 네이버페이 결제
                 </button>
             </div>
 
-            <button type="button" class="btn btn-disabled" style="margin-top: 15px; width: 100%;" onclick="closePaymentSelectModal()">
+            <button type="button" class="btn btn-disabled" style="margin-top: 15px;" onclick="closePaymentSelectModal()">
                 취소
             </button>
         </div>
     </div>
 
     <script>
-    // 선택된 도구 정보를 담을 임시 변수
     let currentSelectedTool = { id: null, name: '', price: 0 };
 
     function openPaymentSelectModal(toolId, toolName, toolPrice) {
@@ -495,7 +492,6 @@
 
     function submitPayment(provider) {
         closePaymentSelectModal();
-        // 기존 작성해두신 requestPay 함수 호출
         requestPay(currentSelectedTool.id, currentSelectedTool.name, currentSelectedTool.price, provider);
     }
     </script>

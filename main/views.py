@@ -11,6 +11,7 @@ from .forms import PostForm, InquiryForm
 from django.db.models import Case, When, Value, IntegerField
 from django.http import HttpResponseForbidden
 from .models import Profile
+from .models import Tool
 import json
 
 @login_required
@@ -196,3 +197,24 @@ def download_excel_template(request):
         
     # 파일이 아직 준비되지 않았을 경우 에러 처리
     raise Http404("다운로드할 템플릿 파일을 찾을 수 없습니다.")
+
+def value_builder(request):
+    """
+    가치 체계 설계기 도구 페이지를 보여주는 뷰 함수
+    """
+    return render(request, 'main/value_builder.html')
+
+def tool_guide(request, tool_id):
+    # 가이드 페이지(노하우)를 보여주는 뷰
+    tool = get_object_or_404(Tool, id=tool_id)
+    return render(request, 'main/tool_guide.html', {'tool': tool})
+
+def run_tool(request, tool_id):
+    tool = get_object_or_404(Tool, id=tool_id)
+    
+    # 💡 도구 이름이나 코드명에 따라 실행할 HTML 분기
+    if "가치 체계" in tool.name:
+        return render(request, 'main/value_builder.html', {'tool': tool})
+    
+    # 기본 도구 실행 페이지
+    return render(request, 'main/run_tool.html', {'tool': tool})
