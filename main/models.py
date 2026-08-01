@@ -59,7 +59,8 @@ class Post(models.Model):
     is_notice = models.BooleanField(default=False, verbose_name="공지글 여부") # 👈 공지글 필드 추가!
     created_at = models.DateTimeField(auto_now_add=True)
     views = models.PositiveIntegerField(default=0, verbose_name="조회수")
-
+    usage_count = models.IntegerField(default=0, verbose_name="누적 사용 횟수")
+    
     def __str__(self):
         return self.title
 

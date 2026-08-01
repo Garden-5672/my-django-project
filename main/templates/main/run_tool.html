@@ -266,21 +266,6 @@
         <p class="header-sub">{{ tool.description }}</p>
     </div>
 
-    <!-- 1. 최상단: 인증키 및 바로가기 버튼 섹션 -->
-    <div class="card-container">
-        <!-- 매월 수정 안내 & 대시보드 인증 키 -->
-        <div class="secret-box">
-            <div class="notice-text">
-                ⚠️ 대시보드 접속 인증 키는 보안을 위해 매월 수정됩니다.
-            </div>
-            <div style="margin-top: 6px;">
-                <span style="font-size: 0.85rem; color: var(--text-sub); display: block; margin-bottom: 4px;">🔑 이번 달 접속 인증 키:</span>
-                <span class="code-badge">
-                    {{ tool.access_code|default:"leo-1234567" }}
-                </span>
-            </div>
-        </div>
-
         <!-- 실행 버튼 -->
         {% if tool.tool_link %}
             <a href="{{ tool.tool_link }}" target="_blank" class="btn-primary">
@@ -289,76 +274,6 @@
         {% else %}
             <p style="color: var(--accent-rose); font-size: 0.9rem; margin: 0;">등록된 도구 링크가 없습니다. Admin에서 추가해 주세요.</p>
         {% endif %}
-    </div>
-
-    <!-- 2. 하단: 안내사항 2탭 섹션 -->
-    <div class="card-container tab-container">
-        <h2 style="font-size: 1.15rem; margin-top: 0; margin-bottom: 16px; color: var(--text-main);">📌 도구 이용 안내</h2>
-
-        <!-- 탭 버튼 -->
-        <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('tab1', this)">📥 대시보드 내 다운로드</button>
-            <button class="tab-btn" onclick="switchTab('tab2', this)">🔗 구글 시트 연동 방식 (상세)</button>
-        </div>
-
-        <!-- 탭 1 내용: 대시보드 내 다운로드 안내 -->
-        <div id="tab1" class="tab-content active">
-            <div class="info-card">
-                <h3 style="margin-top: 0; font-size: 1rem; color: var(--primary-pink);">💡 대시보드 내 다운로드 기능 활용 안내</h3>
-                <p style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">
-                    본 도구는 별도의 오프라인 파일 다운로드 없이 <strong>대시보드 내부에서 결과 및 리포트를 직접 다운로드</strong>할 수 있도록 구현되어 있습니다.
-                </p>
-                <ul style="padding-left: 20px; margin: 0; font-size: 0.88rem; color: var(--text-sub);">
-                    <li>대시보드 접속 후 계산된 정산 내역 및 분석 데이터를 Excel 형태로 바로 내보낼 수 있습니다.</li>
-                    <li>데이터의 최신 상태 유지 및 보안을 위해 웹 대시보드 상에서 작업을 권장합니다.</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- 탭 2 내용: 구글 시트 연동 방식 (상세) -->
-        <div id="tab2" class="tab-content">
-            <p style="font-size: 0.88rem; color: var(--text-sub); margin-top: 0; margin-bottom: 14px;">
-                외부 서버에 개인 금융 데이터를 저장하지 않고, 대표님의 개인 구글 드라이브와 대시보드를 직접 안전하게 연결하는 방식입니다.
-            </p>
-
-            <ul class="step-list">
-                <li class="step-item">
-                    <div class="step-title">1단계: 전용 데이터 저장소 생성 (사본 복제)</div>
-                    <p class="step-desc">
-                        아래 구글 시트 템플릿에 접근한 후 <strong>[사본 만들기]</strong>를 실행하여 대표님 소유의 드라이브에 시트를 생성합니다. (원하신다면 파일
-이름을 자유롭게 변경하셔도 괜찮습니다.)
-                    </p>
-                    <a href="https://docs.google.com/spreadsheets/d/1YXoUbtR5jh7-4KNeOA1FWr1vcPpqb4yKsZ1VleSJw5A/copy" target="_blank" style="color: var(--primary-pink); font-size: 0.85rem; font-weight: bold; text-decoration: underline;">
-                        🔗 Profit First 구글 시트 템플릿 복제 링크
-                    </a>
-                </li>
-
-                <li class="step-item">
-                    <div class="step-title">2단계: 자동화 보안 권한 설정 (공유)</div>
-                    <p class="step-desc">
-                        생성된 대표님의 구글 시트 우측 상단 <strong>[공유]</strong> 버튼을 클릭하고, 대시보드 전용 API 이메일을 <strong>[편집자]</strong> 권한으로 추가해 주세요.
-                    </p>
-                    <span class="code-badge" style="font-size: 0.85rem; font-weight: normal;">
-                        profit-first-api@biztool-lab.iam.gserviceaccount.com
-                    </span>
-                    <p style="font-size: 0.8rem; color: var(--text-sub); margin: 4px 0 0 0;">
-                        * 조직 외 사용자 안내가 뜨더라도 표준 자동화 보안 절차이므로 안심하고 승인하셔도 됩니다.
-                    </p>
-                </li>
-
-                <li class="step-item">
-                    <div class="step-title">3단계: 대시보드에 URL 및 인증키 입력</div>
-                    <p class="step-desc">
-                        <ol>
-                            <li>상단 주소창에 있는 구글 스프레드시트 전체 주소(URL)를 복사합니다.</li>
-                            <li>다시 Profit First 대시보드 화면으로 돌아옵니다.</li>
-                            <li>사이드바 또는 상단에 마련된 [내 구글 시트 주소 (URL) 입력]란에 복사한 주소를 그대로 붙여넣어 줍니다.</li>
-                            <li>[연결 완료 및 구글 시트 저장] 버튼을 누르면 모든 세팅이 안전하게 종료됩니다.</li>
-                        </ol>
-                    </p>
-                </li>
-            </ul>
-        </div>
     </div>
 
     <!-- 하단 돌아가기 -->

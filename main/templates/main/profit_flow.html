@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.name|default:"비즈니스 재무 자금관리" }}</title>
+    <style>
+        :root {
+            --bg-primary: #fff5f7;
+            --bg-surface: #ffffff;
+            --bg-subtle: #fce8ed;
+            --text-main: #2b1b22;
+            --text-sub: #8a6d7b;
+            --border-color: #f7d4dc;
+            --primary-pink: #e85d88;
+            --accent-rose: #c84168;
+            --radius: 12px;
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 20px;
+            line-height: 1.6;
+        }
+
+        .header-box {
+            background: var(--bg-surface);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-rose);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--bg-subtle);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            background: #fafafa;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(232, 93, 136, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 12px 18px;
+            background: var(--primary-pink);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            background: var(--accent-rose);
+            transform: translateY(-1px);
+        }
+
+        .btn-sub {
+            background: var(--bg-surface);
+            color: var(--primary-pink);
+            border: 1px solid var(--primary-pink);
+        }
+
+        .btn-sub:hover {
+            background: var(--bg-subtle);
+            color: var(--accent-rose);
+        }
+
+        .metric-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 640px) {
+            .metric-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px 12px;
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.82rem;
+            color: var(--text-sub);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--accent-rose);
+        }
+
+        .guide-box {
+            background-color: var(--bg-subtle);
+            border-left: 4px solid var(--primary-pink);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 헤더 영역 -->
+    <div class="header-box">
+        <div>
+            <h1 style="margin:0 0 6px 0; font-size: 1.5rem; color: var(--accent-rose);">
+                🌸 {{ tool.name|default:"비즈니스 재무 자금관리" }}
+            </h1>
+            <p style="margin:0; color: var(--text-sub); font-size: 0.9rem;">
+                매출액을 5개의 전용 통장에 체계적으로 분배하고 재무 흐름을 기록하세요.
+            </p>
+        </div>
+        <a href="{% url 'index' %}" class="btn btn-sub" style="width: auto; padding: 8px 16px; font-size: 0.85rem;">← 메인으로</a>
+    </div>
+
+    <!-- 안내 가이드 -->
+    <div class="guide-box">
+        💡 <strong>사용 팁:</strong> 계산된 결과를 <code>📋 구글 시트용 데이터 복사하기</code> 버튼으로 복사한 후, 본인의 구글 시트에 <strong>Ctrl + V</strong>로 붙여넣으면 각 항목별로 칸에 맞춰 깔끔하게 입력됩니다.
+    </div>
+
+    <!-- Part 1: 수익금 자동 분배 계산기 -->
+    <div class="card">
+        <div class="card-title">💵 Part 1. 이번 회차 수익금 분배 계산</div>
+        
+        <div class="grid-2">
+            <div>
+                <div class="form-group">
+                    <label for="total_revenue">이번 회차 총 매출액 (원)</label>
+                    <input type="number" id="total_revenue" class="input-field" value="10000000" step="10000" oninput="calculateDistribution()">
+                </div>
+                <div class="form-group">
+                    <label for="r_profit">🌸 수익 통장 비율 (%)</label>
+                    <input type="number" id="r_profit" class="input-field" value="5" min="0" max="100" oninput="calculateDistribution()">
+                </div>
+                <div class="form-group">
+                    <label for="r_owner">🦴 오너 보상 통장 비율 (%)</label>
+                    <input type="number" id="r_owner" class="input-field" value="50" min="0" max="100" oninput="calculateDistribution()">
+                </div>
+            </div>
+            <div>
+                <div class="form-group">
+                    <label for="r_tax">📝 세금 통장 비율 (%)</label>
+                    <input type="number" id="r_tax" class="input-field" value="15" min="0" max="100" oninput="calculateDistribution()">
+                </div>
+                <div class="form-group">
+                    <label for="r_opex">⚙️ 운영비 통장 비율 (%)</label>
+                    <input type="number" id="r_opex" class="input-field" value="30" min="0" max="100" oninput="calculateDistribution()">
+                </div>
+                <div class="form-group">
+                    <label for="dist_memo">분배 기록 메모</label>
+                    <input type="text" id="dist_memo" class="input-field" value="{{ today_date }} 정기 분배">
+                </div>
+            </div>
+        </div>
+
+        <!-- 실시간 분배 결과 메트릭 -->
+        <div class="metric-container">
+            <div class="metric-card">
+                <div class="metric-label">수익 통장</div>
+                <div class="metric-value" id="m_profit">500,000원</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">오너 보상 통장</div>
+                <div class="metric-value" id="m_owner">5,000,000원</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">세금 통장</div>
+                <div class="metric-value" id="m_tax">1,500,000원</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">운영비 통장</div>
+                <div class="metric-value" id="m_opex">3,000,000원</div>
+            </div>
+        </div>
+
+        <!-- 액션 버튼 -->
+        <div class="grid-2" style="margin-top: 20px;">
+            <button type="button" class="btn btn-sub" onclick="downloadDistExcel()">📊 엑셀(.xlsx) 다운로드</button>
+            <button type="button" class="btn" onclick="copyForGoogleSheet()">📋 구글 시트용 데이터 복사하기</button>
+        </div>
+    </div>
+
+    <!-- 스크립트 로직 -->
+    <script>
+        // 1. 실시간 금액 계산 로직
+        function calculateDistribution() {
+            const rev = parseFloat(document.getElementById('total_revenue').value) || 0;
+            const p = parseFloat(document.getElementById('r_profit').value) || 0;
+            const o = parseFloat(document.getElementById('r_owner').value) || 0;
+            const t = parseFloat(document.getElementById('r_tax').value) || 0;
+            const x = parseFloat(document.getElementById('r_opex').value) || 0;
+
+            document.getElementById('m_profit').innerText = Math.round(rev * (p / 100)).toLocaleString() + '원';
+            document.getElementById('m_owner').innerText = Math.round(rev * (o / 100)).toLocaleString() + '원';
+            document.getElementById('m_tax').innerText = Math.round(rev * (t / 100)).toLocaleString() + '원';
+            document.getElementById('m_opex').innerText = Math.round(rev * (x / 100)).toLocaleString() + '원';
+        }
+
+        // 2. 구글 시트 붙여넣기용 클립보드 복사 함수 (TSV 구분 포맷)
+        function copyForGoogleSheet() {
+            const today = "{{ today_date }}";
+            const rev = document.getElementById('total_revenue').value;
+            const profit = document.getElementById('m_profit').innerText;
+            const owner = document.getElementById('m_owner').innerText;
+            const tax = document.getElementById('m_tax').innerText;
+            const opex = document.getElementById('m_opex').innerText;
+            const memo = document.getElementById('dist_memo').value;
+
+            // 탭 문자(\t)로 연동하면 구글 시트에서 열 분리가 자동으로 됩니다.
+            const rowData = `${today}\t${rev}\t${profit}\t${owner}\t${tax}\t${opex}\t${memo}`;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(rowData).then(() => {
+                    alert("클립보드에 복사되었습니다!\n구글 시트의 원하는 셀을 클릭하고 Ctrl + V 하세요. 🌸");
+                }).catch(err => {
+                    fallbackCopy(rowData);
+                });
+            } else {
+                fallbackCopy(rowData);
+            }
+        }
+
+        // 구형 브라우저 및 비보안 환경(HTTP) 폴백 처리
+        function fallbackCopy(text) {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert("클립보드에 복사되었습니다!\n구글 시트에 붙여넣기(Ctrl + V) 하세요. 🌸");
+        }
+
+        // 3. 엑셀 파일 다운로드 API 요청
+        function downloadDistExcel() {
+            const rev = document.getElementById('total_revenue').value;
+            const memo = encodeURIComponent(document.getElementById('dist_memo').value);
+            window.location.href = `/tools/profit-flow/download/?type=distribution&total_rev=${rev}&memo=${memo}`;
+        }
+
+        // 페이지 로드 시 초기 계산 1회 실행
+        document.addEventListener('DOMContentLoaded', calculateDistribution);
+    </script>
+</body>
+</html>

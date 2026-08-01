@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ tool.name|default:"비즈니스 재무 자금관리" }} 가이드</title>
+    <style>
+        :root {
+            --bg-primary: #fff5f7;
+            --bg-surface: #ffffff;
+            --bg-subtle: #fce8ed;
+            --text-main: #2b1b22;
+            --text-sub: #8a6d7b;
+            --border-color: #f7d4dc;
+            --primary-pink: #e85d88;
+            --accent-rose: #c84168;
+            --radius: 12px;
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px 20px;
+            line-height: 1.7;
+        }
+
+        .header-box {
+            background: var(--bg-surface);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-rose);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--bg-subtle);
+            padding-bottom: 10px;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            margin-bottom: 20px;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .step-item::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--primary-pink);
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 18px;
+            background: var(--bg-surface);
+            color: var(--primary-pink);
+            border: 1px solid var(--primary-pink);
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--bg-subtle);
+            color: var(--accent-rose);
+        }
+
+        code {
+            background: var(--bg-subtle);
+            color: var(--accent-rose);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-box">
+        <div>
+            <h1 style="margin:0 0 6px 0; font-size: 1.5rem; color: var(--accent-rose);">
+                📖 비즈니스 재무 자금관리 가이드
+            </h1>
+            <p style="margin:0; color: var(--text-sub); font-size: 0.9rem;">
+                수익금을 먼저 챙기는 비즈니스 재무 자금관리 핵심 가이드
+            </p>
+        </div>
+        <a href="{% url 'index' %}" class="btn">← 메인으로</a>
+    </div>
+
+    <div class="card">
+        <div class="card-title">💡 비즈니스 재무 자금관리 방식이란?</div>
+        <p>
+            대부분의 사업가는 <strong><code>매출 - 비용 = 이익</code></strong> 공식을 따르지만, 이는 늘 비용이 늘어나 이익이 남지 않는 결과를 가져옵니다.<br>
+            비즈니스 재무 자금관리 핵심 공식은 <strong><code>매출 - 이익 = 비용</code></strong>입니다. 매출이 발생하는 즉시 이익을 먼저 떼어내고, 남은 금액 안에서 운영비를 지출하는 구조로 전환하세요.
+        </p>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📌 5대 통장 분배 가이드</div>
+        <ul class="step-list">
+            <li class="step-item">
+                <strong>1. 매출 통장 (Revenue):</strong> 비즈니스의 매출입니다. 모든 매출이 이 통장으로 들어오게 하세요.
+            </li>
+            <li class="step-item">
+                <strong>2. 수익 통장 (Profit):</strong> 비즈니스의 순수 이익금입니다. 분기별 주주 배당 및 비상금으로 활용하세요. (권장: 5%~)
+            </li>
+            <li class="step-item">
+                <strong>3. 오너 보상 통장 (Owner's Comp):</strong> 대표자 본인에게 지급되는 정당한 노동의 대가(월급)입니다. (권장: 35~50%)
+            </li>
+            <li class="step-item">
+                <strong>4. 세금 통장 (Tax):</strong> 부가가치세 및 종합소득세 납부를 위해 미리 떼어두는 세금 전용 통장입니다. (권장: 15%)
+            </li>
+            <li class="step-item">
+                <strong>5. 운영비 통장 (OpEx):</strong> 제품 생산, 마케팅, 임대료 등 남은 실제 비즈니스 운영 비용입니다. (권장: 30~45%)
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-title">🚀 실정 적용 3단계 팁</div>
+        <p>1. 정기적으로(매월 10일, 25일 등) 입금된 매출액을 4개 통장 비율에 맞게 분배합니다.</p>
+        <p>2. 분배 도구를 활용해 계산 후 <strong>📋 구글 시트 복사하기</strong> 기능으로 본인의 장부에 기록하세요.</p>
+        <p>3. 운영비 통장 잔액 내에서만 지출하도록 통제하면, 이익이 지속적으로 쌓이는 건전한 비즈니스가 완성됩니다.</p>
+    </div>
+    <div class="card">
+    <a href="{% url 'run_tool' tool.id %}" class="btn-action">🚀 내 비즈니스 재무 자금관리 직접 설계하러 가기</a>
+    </div>
+</body>
+</html>

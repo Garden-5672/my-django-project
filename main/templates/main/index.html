@@ -4,18 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI & IT 마이크로 도구 플랫폼</title>
+    <title>레오의 TOOLBOX</title>
 
     <!-- 1. 포트원 V2 SDK 불러오기 -->
     <script src="https://cdn.portone.io/v2/browser-sdk.js"></script>
 
     <script>
-    // 💡 [설정] 결제 수단별 포트원 채널 키 관리
     const PORTONE_CONFIG = {
         STORE_ID: "store-cae165c9-656f-4342-b7ec-677b8d71ccab", 
         CHANNEL_KEYS: {
-            kakaopay: "channel-key-5d31fd2b-c8c4-48c4-81d7-1876ad8555a1", // 카카오페이 테스트 키[cite: 2]
-            naverpay: "" // 네이버페이 채널 키
+            kakaopay: "channel-key-5d31fd2b-c8c4-48c4-81d7-1876ad8555a1",
+            naverpay: ""
         }
     };
 
@@ -49,7 +48,7 @@
                 return alert(`결제 실패: ${response.message}`);
             }
 
-            const serverResponse = await fetch("/complete-payment/", {
+            const serverResponse = await fetch("{% url 'complete_payment' %}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -74,75 +73,22 @@
             alert(`결제 오류 발생: ${error.message || error}`);
         }
     }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const payButtons = document.querySelectorAll(".btn-request-pay");
-        payButtons.forEach(button => {
-            button.addEventListener("click", function() {
-                const toolId = this.dataset.id;
-                const toolName = this.dataset.name;
-                const toolPrice = parseInt(this.dataset.price);
-                const provider = this.dataset.provider;
-
-                requestPay(toolId, toolName, toolPrice, provider);
-            });
-        });
-    });
     </script>
 
     <style>
-        /* ==========================================================================
-           Design System: Pink Minimalist Emblem Theme
-           ========================================================================== */
         :root {
             --bg-primary: #fff5f7;        
             --bg-surface: #ffffff;        
             --bg-subtle: #fce8ed;         
-            
             --text-main: #2b1b22;         
             --text-sub: #8a6d7b;          
             --border-color: #f7d4dc;      
-
             --primary-pink: #e85d88;      
             --accent-rose: #c84168;       
             --soft-pink: #fdf0f3;         
-
             --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
             --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
             --radius: 12px;
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-primary: #1a1215;      
-                --bg-surface: #261a20;      
-                --bg-subtle: #38242f;
-                
-                --text-main: #fde8ed;        
-                --text-sub: #c4a3b1;
-                --border-color: #402835;
-
-                --primary-pink: #f0789d;     
-                --accent-rose: #f48fb1;      
-                --soft-pink: #331f29;
-
-                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-                --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
-            }
-        }
-
-        body.dark-mode {
-            --bg-primary: #1a1215;
-            --bg-surface: #261a20;
-            --bg-subtle: #38242f;
-            --text-main: #fde8ed;
-            --text-sub: #c4a3b1;
-            --border-color: #402835;
-            --primary-pink: #f0789d;
-            --accent-rose: #f48fb1;
-            --soft-pink: #331f29;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 16px rgba(240, 120, 157, 0.15);
         }
 
         body { 
@@ -153,189 +99,34 @@
             line-height: 1.6; 
             background-color: var(--bg-primary); 
             color: var(--text-main);
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .top-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+        .top-navbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo-emblem { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text-main); }
+        .emblem-icon { width: 28px; height: 28px; stroke: var(--primary-pink); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+        .header-box { background: var(--bg-surface); padding: 24px; border-radius: var(--radius); box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .ranking-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-left: 4px solid var(--primary-pink); padding: 20px 24px; border-radius: var(--radius); margin-bottom: 25px; box-shadow: var(--shadow-sm); }
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .tool-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; }
+        .tool-card:hover { border-color: var(--primary-pink); box-shadow: var(--shadow-md); }
 
-        .logo-emblem {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            color: var(--text-main);
-        }
+        .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.88rem; text-align: center; cursor: pointer; border: none; box-sizing: border-box; }
+        .btn-primary { background: var(--primary-pink); color: #ffffff; }
+        .btn-success { background: var(--primary-pink); color: #ffffff; }
+        .btn-secondary { background: var(--bg-subtle); color: var(--primary-pink); border: 1px solid var(--border-color); }
+        .btn-pay { background: transparent; color: var(--primary-pink); border: 1px solid var(--primary-pink); width: 100%; }
+        .btn-pay:hover { background: var(--bg-subtle); }
+        .btn-disabled { background: var(--bg-subtle); color: var(--text-sub); cursor: not-allowed; border: 1px solid var(--border-color); width: 100%; }
+        .btn-logout { background: transparent; color: var(--text-sub); border: 1px solid var(--border-color); }
 
-        .emblem-icon {
-            width: 28px;
-            height: 28px;
-            stroke: var(--primary-pink);
-            fill: none;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+        .action-button-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .action-button-group .btn { width: 100%; }
 
-        .header-box { 
-            background: var(--bg-surface); 
-            padding: 24px; 
-            border-radius: var(--radius); 
-            box-shadow: var(--shadow-sm); 
-            border: 1px solid var(--border-color);
-            margin-bottom: 25px; 
-        }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.8em; font-weight: 600; }
+        .badge-free { background: var(--bg-subtle); color: var(--primary-pink); border: 1px solid var(--primary-pink); }
+        .badge-top { background: var(--bg-subtle); color: var(--accent-rose); border: 1px solid var(--accent-rose); }
 
-        .ranking-box { 
-            background: var(--bg-surface); 
-            border: 1px solid var(--border-color); 
-            border-left: 4px solid var(--primary-pink);
-            padding: 20px 24px; 
-            border-radius: var(--radius); 
-            margin-bottom: 25px; 
-            box-shadow: var(--shadow-sm);
-        }
-
-        .ranking-box h2 {
-            margin-top: 0;
-            font-size: 1.15rem;
-            color: var(--text-main);
-        }
-
-        .tool-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 20px; 
-        }
-
-        .tool-card { 
-            background: var(--bg-surface); 
-            border: 1px solid var(--border-color); 
-            border-radius: var(--radius); 
-            padding: 24px; 
-            box-shadow: var(--shadow-sm); 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .tool-card:hover {
-            border-color: var(--primary-pink);
-            box-shadow: var(--shadow-md);
-        }
-
-        .tool-card h3 {
-            margin-top: 0;
-            color: var(--text-main);
-        }
-
-        /* Buttons */
-        .btn { 
-            display: inline-flex; 
-            align-items: center;
-            justify-content: center;
-            padding: 10px 14px; 
-            text-decoration: none; 
-            border-radius: 8px; 
-            font-weight: 600; 
-            font-size: 0.88rem;
-            text-align: center; 
-            cursor: pointer; 
-            border: none; 
-            transition: opacity 0.2s ease, background-color 0.2s ease;
-            box-sizing: border-box;
-        }
-
-        .btn-primary { 
-            background: var(--primary-pink); 
-            color: #ffffff; 
-        }
-        .btn-primary:hover { opacity: 0.9; }
-
-        .btn-success { 
-            background: var(--primary-pink); 
-            color: #ffffff; 
-        }
-        .btn-success:hover { opacity: 0.9; }
-
-        .btn-secondary {
-            background: var(--bg-subtle);
-            color: var(--primary-pink);
-            border: 1px solid var(--border-color);
-        }
-        .btn-secondary:hover {
-            border-color: var(--primary-pink);
-        }
-
-        .btn-pay { 
-            background: transparent; 
-            color: var(--primary-pink); 
-            border: 1px solid var(--primary-pink);
-            width: 100%;
-        }
-        .btn-pay:hover { 
-            background: var(--bg-subtle); 
-        }
-
-        .btn-disabled { 
-            background: var(--bg-subtle); 
-            color: var(--text-sub); 
-            cursor: not-allowed; 
-            border: 1px solid var(--border-color);
-            width: 100%;
-        }
-
-        .btn-logout {
-            background: transparent;
-            color: var(--text-sub);
-            border: 1px solid var(--border-color);
-        }
-        .btn-logout:hover { background: var(--bg-subtle); }
-
-        /* 💡 2개 버튼 분할 레이아웃 Grid */
-        .action-button-group {
-            display: flex;
-            flex-direction: column; /* 위아래 세로 정렬 */
-            gap: 8px;              /* 버튼 간격 */
-            width: 100%;
-        }
-
-        .action-button-group .btn {
-            width: 100%;           /* 너비 전체 사용 */
-            box-sizing: border-box;
-        }
-
-        /* Badges */
-        .badge { 
-            display: inline-block; 
-            padding: 4px 10px; 
-            border-radius: 4px; 
-            font-size: 0.8em; 
-            font-weight: 600; 
-        }
-        .badge-free { 
-            background: var(--bg-subtle); 
-            color: var(--primary-pink); 
-            border: 1px solid var(--primary-pink);
-        }
-        .badge-top { 
-            background: var(--bg-subtle); 
-            color: var(--accent-rose); 
-            border: 1px solid var(--accent-rose);
-        }
-
-        /* Modal Theme Adjustments */
-        .modal-content {
-            background: var(--bg-surface) !important;
-            border: 1px solid var(--border-color) !important;
-            color: var(--text-main) !important;
-            box-shadow: var(--shadow-md) !important;
-        }
+        .modal-content { background: var(--bg-surface) !important; border: 1px solid var(--border-color) !important; color: var(--text-main) !important; box-shadow: var(--shadow-md) !important; }
     </style>
 </head>
 
@@ -363,7 +154,7 @@
 
     <div class="container">
         {% if user.is_authenticated %}
-            <h2>반갑습니다, {{ user.profile.nickname|default:user.username }}님! 👋</h2>
+            <h1> </h1>
         {% else %}
             <h1>환영합니다! 👋</h1>
             <p style="color: var(--text-sub);">SNS 계정으로 로그인 후 이용해 주세요.</p>
@@ -371,7 +162,7 @@
     </div>
 
     <div class="header-box">
-        <h1 style="margin-top:0;">🛠️ 레오의 비즈니스 도구 마켓</h1>
+        <h1 style="margin-top:0;">🛠️ 비즈니스 성장을 가속하는 도구 마켓</h1>
         {% if user.is_authenticated %}
             <p><strong>{{ user.profile.nickname|default:user.username }}님 환영합니다!</strong></p>
             <p>
@@ -418,33 +209,33 @@
                 <div style="margin-top: 15px;">
                     {% if user.is_authenticated %}
                         
-                        <!-- 1. 내가 선택한 무료 도구인 경우 -->
-                        {% if free_tool and free_tool.id == tool.id %}
-                            <span class="badge badge-free" style="margin-bottom: 8px; display: block; text-align: center;">내 무료 선택 도구</span>
-                            <div class="action-button-group">
-                                <a href="{% url 'tool_guide' tool.id %}" class="btn btn-secondary">📖 가이드</a>
-                                <a href="{% url 'run_tool' tool.id %}" class="btn btn-success">🚀 실행하기</a>
-                            </div>
+                    <!-- 1. 내가 선택한 무료 도구인 경우 -->
+                    {% if free_tool and free_tool.id == tool.id %}
+                        <span class="badge badge-free" style="margin-bottom: 8px; display: block; text-align: center;">내 무료 선택 도구</span>
+                        <div class="action-button-group">
+                            <a href="{% url 'tool_guide' tool.id %}" class="btn btn-secondary">📖 가이드</a>
+                            <a href="{% url 'run_tool' tool.id %}" class="btn btn-success">🚀 실행하기</a>
+                        </div>
 
-                        <!-- 2. 내 유료 결제 도구인 경우 -->
-                        {% elif tool.id in paid_tool_ids %}
-                            <span class="badge badge-top" style="margin-bottom: 8px; display: block; text-align: center;">구매 완료</span>
-                            <div class="action-button-group">
-                                <a href="{% url 'tool_guide' tool.id %}" class="btn btn-secondary">📖 가이드</a>
-                                <a href="{% url 'run_tool' tool.id %}" class="btn btn-success">🚀 실행하기</a>
-                            </div>
+                    <!-- 2. 내 유료 결제 도구인 경우 -->
+                    {% elif tool.id in paid_tool_ids %}
+                        <span class="badge badge-top" style="margin-bottom: 8px; display: block; text-align: center;">구매 완료</span>
+                        <div class="action-button-group">
+                            <a href="{% url 'tool_guide' tool.id %}" class="btn btn-secondary">📖 가이드</a>
+                            <a href="{% url 'run_tool' tool.id %}" class="btn btn-success">🚀 실행하기</a>
+                        </div>
 
-                        <!-- 3. 아직 무료 도구를 고르지 않은 경우 -->
-                        {% elif not free_tool %}
-                            <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%;">🎁 무료 도구로 선택</a>
+                    <!-- 3. 아직 무료 도구를 고르지 않은 경우 -->
+                    {% elif not free_tool %}
+                        <a href="{% url 'select_free_tool' tool.id %}" class="btn btn-primary" style="width: 100%;">🎁 무료 도구로 선택</a>
 
-                        <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
-                        {% else %}
-                            <button class="btn btn-pay"
-                                    onclick="openPaymentSelectModal('{{ tool.id }}', '{{ tool.name }}', '{{ tool.price|default:1000 }}')">
-                                💳 결제하기 ({{ tool.price|default:1000 }}원)
-                            </button>
-                        {% endif %}
+                    <!-- 4. 무료 도구를 이미 다른 걸 골랐고, 이 도구는 미결제인 경우 -->
+                    {% else %}
+                        <!-- 💡 결제 모달 오픈 함수 호출로 수정 -->
+                        <button type="button" class="btn btn-pay" onclick="openPaymentSelectModal('{{ tool.id }}', '{{ tool.name|escapejs }}', '{{ tool.price }}')">
+                            💳 결제하기 ({{ tool.price }}원)
+                        </button>
+                    {% endif %}
 
                     {% else %}
                         <span class="btn btn-disabled">로그인 필요</span>

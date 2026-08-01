@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가이드 | 비즈니스 가치 체계 설계기</title>
+    <style>
+        :root {
+            --bg-primary: #fff5f7;
+            --bg-surface: #ffffff;
+            --bg-subtle: #fce8ed;
+            --text-main: #2b1b22;
+            --text-sub: #8a6d7b;
+            --border-color: #f7d4dc;
+            --primary-pink: #e85d88;
+            --accent-rose: #c84168;
+            --radius: 12px;
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px 20px;
+            line-height: 1.7;
+        }
+
+        .guide-container {
+            background: var(--bg-surface);
+            padding: 32px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .guide-header {
+            border-bottom: 2px solid var(--bg-subtle);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--bg-subtle);
+            color: var(--accent-rose);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        h1 { margin: 0 0 8px 0; font-size: 1.6rem; }
+        h2 { font-size: 1.25rem; color: var(--accent-rose); margin-top: 28px; border-left: 4px solid var(--primary-pink); padding-left: 10px; }
+
+        .concept-box {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+        }
+
+        .step-guide {
+            margin-bottom: 20px;
+        }
+        .step-title {
+            font-weight: bold;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        .btn-action {
+            display: inline-block;
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-pink);
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.05rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-top: 30px;
+            box-sizing: border-box;
+        }
+        .btn-action:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <div class="guide-container">
+        <div class="guide-header">
+            <span class="badge">📖 노하우 가이드</span>
+            <h1>비즈니스 가치 체계 설계법</h1>
+            <p style="color: var(--text-sub); margin: 0;">고객이 처음 만나는 0원 상품부터 고단가 서비스까지, 자연스럽게 유통되는 가치 체계 만드는 원리</p>
+        </div>
+
+        <h2>💡 왜 가치 체계가 필요한가요?</h2>
+        <p>처음 만난 고객에게 100만 원짜리 상품을 바로 팔려고 하면 거절당하기 쉽습니다. 고객의 <strong>심리적 저항과 불신</strong>이 높기 때문입니다.</p>
+        <div class="concept-box">
+            <strong>가치 체계의 핵심 공통 원칙:</strong><br>
+            "고객에게 비싼 상품을 팔기 전에, 작고 위험 부담이 없는 가치를 먼저 경험시켜 <strong>신뢰</strong>를 쌓아야 합니다."
+        </div>
+
+        <h2>🪜 4단계 가치 체계 구축 가이드</h2>
+
+        <div class="step-guide">
+            <div class="step-title">1️⃣ 1단계: 무료 제안 (Lead Magnet)</div>
+            <p style="color: var(--text-sub); font-size: 0.95rem; margin-top: 4px;">
+                • <strong>목적:</strong> 진입 장벽을 완전히 제거하고 잠재고객의 연락처/DB를 확보<br>
+                • <strong>예시:</strong> 체크리스트, 무료 PDF 리포트, 미니 무료 도구 사용권<br>
+                • <strong>핵심:</strong> "이걸 정말 공짜로 준다고?"라는 말이 나올 정도의 유용한 가치여야 함
+            </p>
+        </div>
+
+        <div class="step-guide">
+            <div class="step-title">2️⃣ 2단계: 진입 상품 (Tripwire)</div>
+            <p style="color: var(--text-sub); font-size: 0.95rem; margin-top: 4px;">
+                • <strong>목적:</strong> 무료 이용자를 '돈을 지불하는 구매자'로 심리적 전환<br>
+                • <strong>예시:</strong> 1,000원~10,000원 가격대의 특정 문제 해결 템플릿, 단건 기능 해금<br>
+                • <strong>핵심:</strong> 커피 한 잔 값 수준으로 가격 고민 없이 결제하도록 유도
+            </p>
+        </div>
+
+        <div class="step-guide">
+            <div class="step-title">3️⃣ 3단계: 핵심 서비스 (Core Offer)</div>
+            <p style="color: var(--text-sub); font-size: 0.95rem; margin-top: 4px;">
+                • <strong>목적:</strong> 비즈니스의 지속적인 메인 수익원(Cash Flow) 창출<br>
+                • <strong>예시:</strong> 정규 월간 구독, 시그니처 온라인 강의, 메인 소프트웨어<br>
+                • <strong>핵심:</strong> 2단계에서 맛본 가치를 확장하여 본격적인 문제 해결을 완결
+            </p>
+        </div>
+
+        <div class="step-guide">
+            <div class="step-title">4️⃣ 4단계: 하이엔드 (High-End Offer)</div>
+            <p style="color: var(--text-sub); font-size: 0.95rem; margin-top: 4px;">
+                • <strong>목적:</strong> 최상위 VIP 고객에게 압도적 가치 전달 및 높은 마진 확보<br>
+                • <strong>예시:</strong> 1:1 맞춤형 컨설팅, 100% 외주 구축 서비스, 밀착 코칭<br>
+                • <strong>핵심:</strong> 고객의 시간과 수고를 극적으로 줄여주는 맞춤형 실행
+            </p>
+        </div>
+
+        <!-- 실습 도구로 이동하는 버튼 -->
+        <a href="{% url 'run_tool' tool.id %}" class="btn-action">🚀 내 비즈니스 가치 체계 직접 설계하러 가기</a>
+    </div>
+
+</body>
+</html> 
