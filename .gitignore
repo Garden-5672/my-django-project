@@ -6,6 +6,8 @@ venv/
 
 # Django 관련 환경 설정 및 비밀 데이터
 .env
+*.swp
+.DS_Store
 db.sqlite3
 
 # IDE 설정 파일
