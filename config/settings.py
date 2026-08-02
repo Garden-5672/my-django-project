@@ -19,13 +19,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # 허용할 도메인 및 서버 IP 명시
-ALLOWED_HOSTS = [
-    'yourdomain.com',       # 보유한 실제 도메인
-    'www.yourdomain.com',
-    '123.456.789.0',        # 서버의 Public IP
-    'localhost',            # 로컬 테스트용
-    '127.0.0.1',
-]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
