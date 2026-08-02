@@ -462,3 +462,428 @@ Traceback (most recent call last):
     raise TemplateDoesNotExist(template_name, chain=chain)
 django.template.exceptions.TemplateDoesNotExist: default_run.html
 "GET /tools/2/run/ HTTP/1.1" 500 91959
+Internal Server Error: /board/
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 359, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: main_post.usage_count
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 198, in board_list
+    return render(request, 'main/board_list.html', {'posts': posts})
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 202, in render
+    len_values = len(values)
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 359, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: main_post.usage_count
+"GET /board/ HTTP/1.1" 500 176015
+Internal Server Error: /board/
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 359, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: main_post.usage_count
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 198, in board_list
+    return render(request, 'main/board_list.html', {'posts': posts})
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 202, in render
+    len_values = len(values)
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 359, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: main_post.usage_count
+"GET /board/ HTTP/1.1" 500 176025
+Internal Server Error: /board/
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 359, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: main_post.usage_count
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 198, in board_list
+    return render(request, 'main/board_list.html', {'posts': posts})
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 202, in render
+    len_values = len(values)
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 372, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\db\backends\sqlite3\base.py", line 359, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: main_post.usage_count
+"GET /board/ HTTP/1.1" 500 176025
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 57, in index
+    return render(request, 'main/index.html', context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 333, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\library.py", line 325, in render
+    output = self.func(*resolved_args, **resolved_kwargs)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\templatetags\socialaccount.py", line 25, in provider_login_url
+    provider = adapter.get_provider(request, provider)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 234, in get_provider
+    app = self.get_app(request, provider=provider, client_id=client_id)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 326, in get_app
+    raise SocialApp.DoesNotExist()
+allauth.socialaccount.models.SocialApp.DoesNotExist
+"GET / HTTP/1.1" 500 141675
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 57, in index
+    return render(request, 'main/index.html', context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 333, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\library.py", line 325, in render
+    output = self.func(*resolved_args, **resolved_kwargs)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\templatetags\socialaccount.py", line 25, in provider_login_url
+    provider = adapter.get_provider(request, provider)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 234, in get_provider
+    app = self.get_app(request, provider=provider, client_id=client_id)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 326, in get_app
+    raise SocialApp.DoesNotExist()
+allauth.socialaccount.models.SocialApp.DoesNotExist
+"GET / HTTP/1.1" 500 141382
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 57, in index
+    return render(request, 'main/index.html', context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 333, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\library.py", line 325, in render
+    output = self.func(*resolved_args, **resolved_kwargs)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\templatetags\socialaccount.py", line 25, in provider_login_url
+    provider = adapter.get_provider(request, provider)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 234, in get_provider
+    app = self.get_app(request, provider=provider, client_id=client_id)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 326, in get_app
+    raise SocialApp.DoesNotExist()
+allauth.socialaccount.models.SocialApp.DoesNotExist
+"GET / HTTP/1.1" 500 141382
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\my_django_project\venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\my_django_project\main\views.py", line 57, in index
+    return render(request, 'main/index.html', context)
+  File "C:\my_django_project\venv\Lib\site-packages\django\shortcuts.py", line 25, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\defaulttags.py", line 333, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\my_django_project\venv\Lib\site-packages\django\template\library.py", line 325, in render
+    output = self.func(*resolved_args, **resolved_kwargs)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\templatetags\socialaccount.py", line 25, in provider_login_url
+    provider = adapter.get_provider(request, provider)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 234, in get_provider
+    app = self.get_app(request, provider=provider, client_id=client_id)
+  File "C:\my_django_project\venv\Lib\site-packages\allauth\socialaccount\adapter.py", line 326, in get_app
+    raise SocialApp.DoesNotExist()
+allauth.socialaccount.models.SocialApp.DoesNotExist
+"GET / HTTP/1.1" 500 141382

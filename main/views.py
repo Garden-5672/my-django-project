@@ -108,9 +108,9 @@ def tool_guide(request, tool_id):
     # 💡 도구명이 '비즈니스 재무 자금관리'이거나 id로 분기
     if "재무" in tool.name or tool_id == 1:
         return render(request, 'main/profit_guide.html', {'tool': tool})
-    
-    return render(request, 'main/tool_guide.html', {'tool': tool})
-
+    elif "마케팅" in tool.name or tool_id == 2:
+            return render(request, 'main/tool_guide.html', {'tool': tool})
+    return render(request, 'main/system_guide.html', {'tool': tool})
 
 # 5. 동적 도구 실행 뷰 (권한 검증 및 사용량 증가)
 @login_required
@@ -135,10 +135,16 @@ def run_tool(request, tool_id):
         'today_date': datetime.now().strftime('%Y-%m-%d')
     }
 
+# 1. 재무 관련 도구
     if "재무" in tool.name or tool_id == 1:
         return render(request, 'main/profit_flow.html', context)
     
-    return render(request, 'main/value_builder.html', context)
+    # 2. 다른 특정 도구 추가 예시 (예: 마케팅 또는 ID 2번)
+    elif "마케팅" in tool.name or tool_id == 2:
+        return render(request, 'main/value_builder.html', context)
+
+    # 3. 그 외 기본 도구
+    return render(request, 'main/system_builder.html', context)
 
 
 # 6. 엑셀 다운로드 API

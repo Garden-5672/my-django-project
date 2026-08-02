@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비즈니스 시스템 아키텍처 설계 도구</title>
+    <style>
+        :root {
+            --bg-primary: #fff5f7;        
+            --bg-surface: #ffffff;        
+            --bg-subtle: #fce8ed;         
+            --text-main: #2b1b22;         
+            --text-sub: #8a6d7b;          
+            --border-color: #f7d4dc;      
+            --primary-pink: #e85d88;      
+            --accent-rose: #c84168;       
+            --soft-pink: #fdf0f3;         
+            --shadow-sm: 0 2px 8px rgba(232, 93, 136, 0.08);
+            --shadow-md: 0 4px 16px rgba(232, 93, 136, 0.15);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: var(--text-main);
+            margin-bottom: 6px;
+            font-size: 1.75rem;
+        }
+
+        .header p {
+            color: var(--text-sub);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: var(--primary-pink);
+            font-size: 1.25rem;
+            border-bottom: 2px solid var(--bg-subtle);
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+            background-color: var(--bg-surface);
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: var(--primary-pink);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
+
+        button.btn-submit {
+            width: 100%;
+            background-color: var(--primary-pink);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        button.btn-submit:hover {
+            background-color: var(--accent-rose);
+        }
+
+        #resultArea {
+            display: none;
+            background: var(--soft-pink);
+            border: 1px solid var(--border-color);
+        }
+
+        .result-title {
+            color: var(--accent-rose);
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>비즈니스 시스템 설계 워크북</h1>
+        <p>창업자 중심 운영에서 시스템 중심 경영으로의 전환 프레임워크</p>
+    </div>
+
+    <!-- 1. 개인적 삶의 목적 -->
+    <div class="card">
+        <h2>1. 창업자 개인의 주 목적 (Individual Life Goal)</h2>
+        <div class="form-group">
+            <label for="val1">1) 삶에서 최우선으로 추구하는 가치 (자유, 가족, 성취 등)</label>
+            <input type="text" id="val1" placeholder="예: 시간적/경제적 자유, 가족과 보내는 일상">
+        </div>
+        <div class="form-group">
+            <label for="val2">2) 사업이 개인에게 제공해야 할 목표 월 순수익</label>
+            <input type="text" id="val2" placeholder="예: 월 2,000만 원">
+        </div>
+    </div>
+
+    <!-- 2. 사업의 구조적 목표 -->
+    <div class="card">
+        <h2>2. 비즈니스 구조적 목표 (Strategic Business Architecture)</h2>
+        <div class="form-group">
+            <label for="val3">1) 중장기 정량 지표 (3~5년 후 매출 및 영업이익률)</label>
+            <input type="text" id="val3" placeholder="예: 연 매출 20억 원, 영업이익률 25%">
+        </div>
+        <div class="form-group">
+            <label for="val4">2) 핵심 고객군 및 독점적 가치 제안</label>
+            <textarea id="val4" placeholder="예: 30대 직장인을 위한 100% 맞춤형 영양 솔루션 및 빠른 당일 배송"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="val5">3) 표준화 및 위임 가능성 (시스템화 단계)</label>
+            <select id="val5">
+                <option value="고도화 시스템">고도화 (모든 프로세스가 매뉴얼화되어 제3자 운영 가능)</option>
+                <option value="부분 시스템">부분 시스템 (핵심 결정 외 표준 작업 절차 위임)</option>
+                <option value="초기 단계">초기 (창업자 개인 역량 의존도 높음 - 개선 필요)</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-submit" onclick="buildCharter()">비즈니스 시스템 헌장 생성</button>
+
+    <!-- 결과 영역 -->
+    <div class="card" id="resultArea">
+        <div class="result-title">📜 비즈니스 시스템 아키텍처 선언서</div>
+        <p id="resLife"></p>
+        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 12px 0;">
+        <p id="resBusiness"></p>
+    </div>
+</div>
+
+<script>
+    function buildCharter() {
+        const v1 = document.getElementById('val1').value || '미입력';
+        const v2 = document.getElementById('val2').value || '미입력';
+        const v3 = document.getElementById('val3').value || '미입력';
+        const v4 = document.getElementById('val4').value || '미입력';
+        const v5 = document.getElementById('val5').value;
+
+        document.getElementById('resLife').innerHTML = 
+            '<strong>[개인 라이프 목표]:</strong> 본 사업은 창업자 개인의 "' + v1 + '" 가치를 지원하는 도구로 기능하며, 매월 "' + v2 + '"의 보상을 안정적으로 창출한다.';
+        
+        document.getElementById('resBusiness').innerHTML = 
+            '<strong>[비즈니스 아키텍처]:</strong> 본 사업은 "' + v4 + '" 가치를 전달하며, 중장기적으로 "' + v3 + '" 성과를 달성한다. 또한 운영 구조를 "' + v5 + '" 수준으로 구축하여 지속 가능한 자립형 시스템을 완성한다.';
+
+        document.getElementById('resultArea').style.display = 'block';
+        document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
