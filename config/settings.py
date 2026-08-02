@@ -95,15 +95,15 @@ if DEBUG:
 else:
     # 상용 배포 환경: PostgreSQL 사용
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME', 'my_db'),
-            'USER': os.getenv('DB_USER', 'my_user'),
-            'PASSWORD': os.getenv('DB_PASSWORD', 'my_password'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
+}
 
 
 # Password validation
